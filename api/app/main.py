@@ -1,0 +1,30 @@
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+
+from app.controllers.auth_router import auth_router
+from app.settings import Settings
+
+
+def start_app():
+    api_app = FastAPI()
+    settings = Settings()
+
+    api_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=['*'],
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*'],
+    )
+
+    api_app.include_router(auth_router, prefix=f'{settings.prefix}/auth', tags=['auth'])
+
+    return api_app
+
+
+app = start_app()
+
+
+@app.get('/', tags=['root'])
+async def root():
+    return {'message': 'Hello :з'}

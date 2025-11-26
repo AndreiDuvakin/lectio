@@ -4,6 +4,7 @@ from typing import List
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.domain.models.base import PhotoAbstract
 
@@ -43,3 +44,9 @@ class User(PhotoAbstract):
         back_populates='student',
         foreign_keys=['student_id'],
     )
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)

@@ -1,0 +1,30 @@
+from datetime import date
+from typing import Optional
+
+from pydantic import BaseModel, EmailStr, Field
+
+
+class UserCreate(BaseModel):
+    first_name: str = Field(max_length=250)
+    last_name: str = Field(max_length=250)
+    patronymic: Optional[str] = Field(default=None, max_length=250)
+    login: str = Field(max_length=250)
+    email: Optional[EmailStr] = None
+    birthdate: date
+    password: str = Field(min_length=8)
+    role_id: Optional[int] = Field(default=None)
+    repeat_password: str = Field(min_length=8)
+
+
+class UserRead(BaseModel):
+    first_name: str
+    last_name: str
+    patronymic: Optional[str]
+    login: str
+    email: Optional[EmailStr]
+    birthdate: date
+    status_id: int
+    role_id: int
+
+    class Config:
+        orm_mode = True
