@@ -9,9 +9,9 @@ from app.domain.models import Base
 class RootTable(Base):
     __abstract__ = True
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
-    created_at: Mapped[datetime] = mapped_column(default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(default=func.now(), onupdate=func.now())
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(onupdate=func.now(), server_default=func.now())
 
 
 class PhotoAbstract(RootTable):

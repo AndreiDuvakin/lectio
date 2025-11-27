@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.controllers.auth_router import auth_router
+from app.controllers.register_router import register_router
 from app.settings import Settings
 
 
@@ -18,6 +19,7 @@ def start_app():
     )
 
     api_app.include_router(auth_router, prefix=f'{settings.prefix}/auth', tags=['auth'])
+    api_app.include_router(register_router, prefix=f'{settings.prefix}/register', tags=['register'])
 
     return api_app
 

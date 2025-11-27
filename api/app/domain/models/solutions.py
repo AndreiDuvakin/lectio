@@ -9,10 +9,10 @@ from app.domain.models.base import RootTable
 class Solution(RootTable):
     __tablename__ = 'solutions'
 
-    answer_text: Mapped[str] = mapped_column()
-    assessment_text: Mapped[str] = mapped_column(String(50))
+    answer_text: Mapped[str] = mapped_column(nullable=True)
+    assessment_text: Mapped[str] = mapped_column(String(50), nullable=True)
 
-    assessment_autor_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    assessment_autor_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
     task_id: Mapped[int] = mapped_column(ForeignKey('tasks.id'), nullable=False)
     student_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
 

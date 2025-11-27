@@ -10,8 +10,8 @@ class Task(RootTable):
     __tablename__ = 'tasks'
 
     title: Mapped[str] = mapped_column(String(250), nullable=False)
-    description: Mapped[str] = mapped_column()
-    text: Mapped[str] = mapped_column()
+    description: Mapped[str] = mapped_column(nullable=True)
+    text: Mapped[str] = mapped_column(nullable=True)
     number: Mapped[int] = mapped_column(nullable=False)
 
     course_id: Mapped[int] = mapped_column(ForeignKey('courses.id'), nullable=False)
@@ -20,4 +20,4 @@ class Task(RootTable):
     course: Mapped['Course'] = relationship('Course', back_populates='tasks')
     creator: Mapped['User'] = relationship('User', back_populates='created_tasks')
 
-    files: Mapped[List['TaskFile']] = relationship('TaskFile', back_populates='lessons')
+    files: Mapped[List['TaskFile']] = relationship('TaskFile', back_populates='task')

@@ -11,4 +11,4 @@ class Status(RootTable):
 
     title: Mapped[str] = mapped_column(String(250), nullable=False, unique=True)
 
-    users = Mapped[List['User']] = relationship('User', back_populates='status')
+    users: Mapped[List['User']] = relationship('User', back_populates='status')

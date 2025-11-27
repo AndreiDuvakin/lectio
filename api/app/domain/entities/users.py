@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
-class UserCreate(BaseModel):
+class UserRegister(BaseModel):
     first_name: str = Field(max_length=250)
     last_name: str = Field(max_length=250)
     patronymic: Optional[str] = Field(default=None, max_length=250)
@@ -12,11 +12,15 @@ class UserCreate(BaseModel):
     email: Optional[EmailStr] = None
     birthdate: date
     password: str = Field(min_length=8)
-    role_id: Optional[int] = Field(default=None)
     repeat_password: str = Field(min_length=8)
 
 
+class UserCreate(UserRegister):
+    role_id: int = Field()
+
+
 class UserRead(BaseModel):
+    id: int
     first_name: str
     last_name: str
     patronymic: Optional[str]
@@ -28,3 +32,4 @@ class UserRead(BaseModel):
 
     class Config:
         orm_mode = True
+        from_attributes = True

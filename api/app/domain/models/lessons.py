@@ -10,8 +10,8 @@ class Lesson(RootTable):
     __tablename__ = 'lessons'
 
     title: Mapped[str] = mapped_column(String(250), nullable=False)
-    description: Mapped[str] = mapped_column()
-    text: Mapped[str] = mapped_column()
+    description: Mapped[str] = mapped_column(nullable=True)
+    text: Mapped[str] = mapped_column(nullable=True)
     number: Mapped[int] = mapped_column(nullable=False)
 
     course_id: Mapped[int] = mapped_column(ForeignKey('courses.id'), nullable=False)
@@ -20,4 +20,4 @@ class Lesson(RootTable):
     course: Mapped['Course'] = relationship('Course', back_populates='lessons')
     creator: Mapped['User'] = relationship('User', back_populates='created_lessons')
 
-    files: Mapped[List['LessonFile']] = relationship('LessonFile', back_populates='lessons')
+    files: Mapped[List['LessonFile']] = relationship('LessonFile', back_populates='lesson')
