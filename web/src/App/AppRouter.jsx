@@ -1,0 +1,29 @@
+import {Routes, Route, Navigate} from "react-router-dom";
+import PrivateRoute from "./PrivateRoute.jsx";
+import AdminRoute from "./AdminRoute.jsx";
+import LoginPage from "../Components/Pages/LoginPage/LoginPage.jsx";
+import CoursesPage from "../Components/Pages/Courses/CoursesPage.jsx";
+import MainLayout from "../Components/Layouts/MainLayout.jsx";
+
+
+const AppRouter = () => (
+    <Routes>
+        <Route path="/login" element={<LoginPage/>}/>
+
+        <Route element={<PrivateRoute/>}>
+            <Route element={<MainLayout/>}>
+                <Route path={"/"} element={<CoursesPage/>}/>
+            </Route>
+        </Route>
+
+        <Route element={<AdminRoute/>}>
+            {/*<Route element={<MainLayout />}>*/}
+            {/*    <Route path="/admin" element={<AdminPage />} />*/}
+            {/*</Route>*/}
+        </Route>
+
+        <Route path={"*"} element={<Navigate to={"/"}/>}/>
+    </Routes>
+);
+
+export default AppRouter;

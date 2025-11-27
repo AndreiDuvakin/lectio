@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     db_schema: str = Field(alias='DB_SCHEMA')
 
     secret_key: str = Field(alias='SECRET_KEY')
-    algorithm: str = Field(alias='ALGORITHM', default='sha256')
+    algorithm: str = Field(alias='ALGORITHM', default='HS256')
 
     default_role_name: str = Field(alias='DEFAULT_ROLE_NAME', default='student')
     root_role_name: str = Field(alias='ROOT_ROLE_NAME', default='root')

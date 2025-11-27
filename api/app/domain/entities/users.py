@@ -3,6 +3,9 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.domain.entities.roles import RoleRead
+from app.domain.entities.statuses import StatusRead
+
 
 class UserRegister(BaseModel):
     first_name: str = Field(max_length=250)
@@ -30,6 +33,8 @@ class UserRead(BaseModel):
     status_id: int
     role_id: int
 
+    role: RoleRead
+    status: StatusRead
+
     class Config:
-        orm_mode = True
         from_attributes = True

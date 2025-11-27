@@ -1,17 +1,20 @@
-import re
-from typing import Optional
-
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.roles_repository import RolesRepository
-from app.application.statuses_repository import StatusesRepository
 from app.application.users_repository import UsersRepository
-from app.domain.entities.users import UserRegister, UserRead
-from app.domain.models.users import User
-from app.settings import Settings
+from app.domain.entities.users import UserRead
 
 
 class UsersService:
     def __init__(self, db: AsyncSession):
-        pass
+        self.users_repository = UsersRepository(db)
+
+    async def get_by_id(self, user_id: int) -> UserRead:
+        user = await self.users_repository.get_by_id(user_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Пользователь не найден',
+            )
+
+        return UserRead.model_validate(user)

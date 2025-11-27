@@ -16,7 +16,7 @@ security = HTTPBearer()
 async def require_auth_user(
         credentials: HTTPAuthorizationCredentials = Security(security),
         db: AsyncSession = Depends(get_db)
-):
+) -> User:
     auth_data = get_auth_data()
 
     try:
@@ -34,7 +34,7 @@ async def require_auth_user(
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Ошибка авторизации')
 
-    if user.status != UserStatuses.ACTIVE:
+    if user.status.title != UserStatuses.ACTIVE:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Ошибка авторизации')
 
     return user

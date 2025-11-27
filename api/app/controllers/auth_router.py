@@ -15,7 +15,6 @@ auth_router = APIRouter()
     description='Logs in the user and outputs the `access_token` ',
 )
 async def auth_user(
-        response: Response,
         user_data: LoginRequest,
         db: AsyncSession = Depends(get_db)
 ):
