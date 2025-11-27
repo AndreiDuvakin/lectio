@@ -10,7 +10,27 @@ export const usersApi = createApi({
         getAuthenticatedUserData: builder.query({
             query: () => "/users/me/",
         }),
+        updateUser: builder.mutation({
+            query: ({userId, ...data}) => ({
+                url: `/users/${userId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["user"],
+        }),
+        updateUserPassword: builder.mutation({
+            query: ({userId, ...data}) => ({
+                url: `/users/change-password/${userId}/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["user"],
+        }),
     }),
 });
 
-export const {useGetAuthenticatedUserDataQuery} = usersApi;
+export const {
+    useGetAuthenticatedUserDataQuery,
+    useUpdateUserMutation,
+    useUpdateUserPasswordMutation,
+} = usersApi;

@@ -14,7 +14,7 @@ const useLoginPage = () => {
     const hasRedirected = useRef(false);
 
     const pageContainerStyle = {
-        paddingTop: screen.xs ? "100px" : "200px"
+        paddingTop: screen.xs ? "100px" : "200px",
     };
 
     useEffect(() => {

@@ -21,12 +21,11 @@ const MainLayout = () => {
     } = useMainLayout();
 
     const menuItems = [
-        getItem("Мои курсы", "/", <BookOutlined/>),
+        getItem("Мои курсы", "/courses", <BookOutlined/>),
         getItem("Профиль", "/profile", <UserOutlined/>),
         getItem("Выйти", "logout", <LogoutOutlined/>),
         {type: "divider"}
     ];
-
 
     return (
         <Layout style={{minHeight: "100vh", margin: "-0.4vw"}}>

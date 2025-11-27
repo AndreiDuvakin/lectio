@@ -4,6 +4,7 @@ import AdminRoute from "./AdminRoute.jsx";
 import LoginPage from "../Components/Pages/LoginPage/LoginPage.jsx";
 import CoursesPage from "../Components/Pages/Courses/CoursesPage.jsx";
 import MainLayout from "../Components/Layouts/MainLayout.jsx";
+import ProfilePage from "../Components/Pages/ProfilePage/ProfilePage.jsx";
 
 
 const AppRouter = () => (
@@ -12,7 +13,9 @@ const AppRouter = () => (
 
         <Route element={<PrivateRoute/>}>
             <Route element={<MainLayout/>}>
-                <Route path={"/"} element={<CoursesPage/>}/>
+                <Route path={"/courses"} element={<CoursesPage/>}/>
+                <Route path={"/profile"} element={<ProfilePage/>}/>
+                <Route path={"*"} element={<Navigate to={"/courses"}/>}/>
             </Route>
         </Route>
 

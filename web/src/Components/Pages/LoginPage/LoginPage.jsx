@@ -34,7 +34,6 @@ const LoginPage = () => {
                     </Form.Item>
                 </Form>
             </Col>
-
         </Flex>
     )
 };

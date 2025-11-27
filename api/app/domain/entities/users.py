@@ -22,6 +22,19 @@ class UserCreate(UserRegister):
     role_id: int = Field()
 
 
+class UserUpdate(BaseModel):
+    first_name: str = Field(max_length=250)
+    last_name: str = Field(max_length=250)
+    patronymic: Optional[str] = Field(default=None, max_length=250)
+    email: Optional[EmailStr] = None
+    birthdate: date
+
+
+class PasswordChangeRequest(BaseModel):
+    password: str
+    repeat_password: str
+
+
 class UserRead(BaseModel):
     id: int
     first_name: str
