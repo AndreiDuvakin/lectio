@@ -12,7 +12,7 @@ class Course(PhotoAbstract):
     title: Mapped[str] = mapped_column(String(250), nullable=False)
     description: Mapped[str] = mapped_column(String(1000), nullable=True)
 
-    teachers: Mapped[List['CourseTeacher']] = relationship('CourseTeacher', back_populates='course')
-    enrollments: Mapped[List['Enrollment']] = relationship('Enrollment', back_populates='course')
+    teachers: Mapped[List['CourseTeacher']] = relationship('CourseTeacher', back_populates='course', lazy='select')
+    enrollments: Mapped[List['Enrollment']] = relationship('Enrollment', back_populates='course', lazy='select')
     lessons: Mapped[List['Lesson']] = relationship('Lesson', back_populates='course')
     tasks: Mapped[List['Task']] = relationship('Task', back_populates='course')

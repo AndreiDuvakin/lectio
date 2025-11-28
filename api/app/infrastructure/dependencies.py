@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from app.application.users_repository import UsersRepository
-from app.core.constants import UserStatuses
+from app.core.constants import UserStatuses, UserRoles
 from app.database.session import get_db
 from app.domain.models.users import User
 from app.settings import get_auth_data, Settings
@@ -42,6 +42,13 @@ async def require_auth_user(
 
 def require_admin(user: User = Depends(require_auth_user)):
     if user.role.title != Settings().root_role_name:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Ошибка доступа')
+
+    return user
+
+
+def require_teacher(user: User = Depends(require_auth_user)):
+    if user.role.title not in [UserRoles.TEACHER, Settings().root_role_name]:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Ошибка доступа')
 
     return user
