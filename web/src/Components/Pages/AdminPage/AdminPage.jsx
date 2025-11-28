@@ -2,8 +2,8 @@ import {Button, Col, Flex, FloatButton, Input, Result, Row, Table, Tooltip, Typo
 import {ControlOutlined, PlusOutlined} from "@ant-design/icons";
 import useAdminPage from "./useAdminPage.js";
 import LoadingIndicator from "../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
-import CreateUserModalForm from "./CreateUserModalForm/CreateUserModalForm.jsx";
-import UpdateUserModalForm from "./UpdateUserModalForm/UpdateUserModalForm.jsx";
+import CreateUserModalForm from "./Components/CreateUserModalForm/CreateUserModalForm.jsx";
+import UpdateUserModalForm from "./Components/UpdateUserModalForm/UpdateUserModalForm.jsx";
 
 const {Title} = Typography;
 

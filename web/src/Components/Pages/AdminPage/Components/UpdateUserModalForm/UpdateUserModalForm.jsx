@@ -23,7 +23,7 @@ import {
     TagOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import LoadingIndicator from "../../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
+import LoadingIndicator from "../../../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import useUpdateUserModalForm from "./useUpdateUserModalForm.js";
 
 const {Title, Text} = Typography;

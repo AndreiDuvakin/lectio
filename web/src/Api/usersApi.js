@@ -39,6 +39,13 @@ export const usersApi = createApi({
             }),
             invalidatesTags: ["user"],
         }),
+        getUsersByRoleName: builder.query({
+            query: (roleName) => ({
+                url: `/users/role/${roleName}/`,
+                method: "GET",
+            }),
+            providesTags: ["user"],
+        }),
     }),
 });
 
@@ -48,4 +55,5 @@ export const {
     useUpdateUserMutation,
     useUpdateUserPasswordMutation,
     useCreateUserMutation,
+    useGetUsersByRoleNameQuery,
 } = usersApi;

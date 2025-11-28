@@ -95,3 +95,11 @@ class UsersService:
         user_model = await self.users_repository.update(user_model)
 
         return UserRead.model_validate(user_model)
+
+    async def get_by_role_name(self, role_name: str) -> List[UserRead]:
+        users = await self.users_repository.get_by_role_name(role_name)
+        response = []
+        for user in users:
+            response.append(UserRead.model_validate(user))
+
+        return response

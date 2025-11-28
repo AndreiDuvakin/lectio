@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.domain.models import Role
 from app.domain.models.users import User
 
 
@@ -30,6 +31,15 @@ class UsersRepository:
         )
         result = await self.db.execute(query)
         return result.scalars().first()
+
+    async def get_by_role_name(self, role_name: str) -> List[User]:
+        query = (
+            select(User)
+            .join(User.role)
+            .filter(Role.title == role_name)
+        )
+        result = await self.db.execute(query)
+        return result.scalars().all()
 
     async def create(self, user: User) -> User:
         self.db.add(user)

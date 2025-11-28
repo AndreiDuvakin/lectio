@@ -1,11 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
 import {Form, notification} from "antd";
-import {setSelectedUserToUpdate} from "../../../../Redux/Slices/usersSlice.js";
-import {useGetAllRolesQuery} from "../../../../Api/rolesApi.js";
+import {setSelectedUserToUpdate} from "../../../../../Redux/Slices/usersSlice.js";
+import {useGetAllRolesQuery} from "../../../../../Api/rolesApi.js";
 import {useEffect} from "react";
 import dayjs from "dayjs";
-import {useUpdateUserMutation, useUpdateUserPasswordMutation} from "../../../../Api/usersApi.js";
-import {useGetStatusesQuery} from "../../../../Api/statusesApi.js";
+import {useUpdateUserMutation, useUpdateUserPasswordMutation} from "../../../../../Api/usersApi.js";
+import {useGetStatusesQuery} from "../../../../../Api/statusesApi.js";
 
 
 const useUpdateUserModalForm = () => {

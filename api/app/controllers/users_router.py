@@ -86,3 +86,18 @@ async def create_user(
 ):
     register_service = RegisterService(db)
     return await register_service.create_user(user)
+
+
+@users_router.get(
+    '/role/{role_name}/',
+    response_model=List[UserRead],
+    summary='Return all users with given role',
+    description='Return all users with given role',
+)
+async def get_users_by_role_name(
+        role_name: str,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(require_auth_user),
+):
+    users_service = UsersService(db)
+    return await users_service.get_by_role_name(role_name)
