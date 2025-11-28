@@ -18,6 +18,7 @@ import {
 import useCoursesPage from "./useCoursesPage.js";
 import LoadingIndicator from "../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import CreateCourseModalForm from "./Components/CreateCourseModalForm/CreateCourseModalForm.jsx";
+import UpdateCourseModalForm from "./Components/UpdateCourseModalForm/UpdateCourseModalForm.jsx";
 
 const {Title, Text} = Typography;
 
@@ -103,27 +104,11 @@ const CoursesPage = () => {
                                         course.description || <Text type="secondary">Без описания</Text>
                                     }
                                 />
-                                <Space direction="vertical" style={{width: "100%", marginTop: 16}}>
-                                    <Space>
-                                        <TeamOutlined/>
-                                        <Text>
-                                            {course.teachers?.length || 0} учител
-                                            {course.teachers?.length === 1 ? "ь" : "ей"}
-                                        </Text>
-                                    </Space>
-                                    <Space>
-                                        <UserOutlined/>
-                                        <Text>
-                                            {course.enrollments?.length || 0} студент
-                                            {course.enrollments?.length === 1 ? "" : "ов"}
-                                        </Text>
-                                    </Space>
-                                </Space>
 
                                 {course.teachers?.length > 0 && (
                                     <div style={{marginTop: 16}}>
                                         <Text type="secondary">Преподаватели:</Text>
-                                        <Avatar.Group maxCount={3} style={{marginTop: 8}}>
+                                        <Avatar.Group max={{count: 3}} style={{marginTop: 8}}>
                                             {course.teachers.map((t) => (
                                                 <Avatar key={t.teacher_id} style={{backgroundColor: "#1890ff"}}>
                                                     {t.teacher?.first_name?.[0] || "У"}
@@ -147,6 +132,7 @@ const CoursesPage = () => {
             </Tooltip>
 
             <CreateCourseModalForm/>
+            <UpdateCourseModalForm/>
         </div>
     );
 };

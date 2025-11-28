@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.courses_repository import CoursesRepository
-from app.domain.entities.courses import CourseRead, CourseCreate
+from app.domain.entities.courses import CourseRead, CourseCreate, CourseCreated
 from app.domain.models import Course
 
 
@@ -22,7 +22,7 @@ class CoursesService:
 
         return response
 
-    async def create(self, course: CourseCreate) -> Optional[CourseRead]:
+    async def create(self, course: CourseCreate) -> CourseCreated:  # ← возвращаем CourseCreated
         course_model = Course(
             title=course.title,
             description=course.description,
@@ -30,7 +30,7 @@ class CoursesService:
 
         course_model = await self.courses_repository.create(course_model)
 
-        return CourseRead.model_validate(course_model)
+        return CourseCreated.model_validate(course_model)
 
     async def update(self, course_id: int, course: CourseCreate) -> Optional[CourseRead]:
         course_model = await self.courses_repository.get_by_id(course_id)

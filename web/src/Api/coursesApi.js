@@ -38,10 +38,10 @@ export const coursesApi = createApi({
             providesTags: ['teacher'],
         }),
         replaceCourseTeachers: builder.mutation({
-            query: ({courseId, ...data}) => ({
+            query: ({courseId, teachers}) => ({
                 url: `/courses/${courseId}/teachers/`,
                 method: "PUT",
-                body: data,
+                body: teachers,
             }),
             invalidatesTags: ['teacher'],
         }),
@@ -53,10 +53,10 @@ export const coursesApi = createApi({
             providesTags: ['student'],
         }),
         replaceCourseStudents: builder.mutation({
-            query: ({courseId, ...data}) => ({
+            query: ({courseId, students}) => ({
                 url: `/courses/${courseId}/students/`,
                 method: "PUT",
-                body: data,
+                body: students,
             }),
             invalidatesTags: ['student'],
         }),

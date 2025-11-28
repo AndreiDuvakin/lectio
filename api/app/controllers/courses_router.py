@@ -5,12 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import get_db
 from app.domain.entities.course_teachers import CourseTeacherRead, CourseTeacherCreate
-from app.domain.entities.courses import CourseRead, CourseCreate, CourseUpdate
+from app.domain.entities.courses import CourseRead, CourseCreate, CourseUpdate, CourseCreated
 from app.domain.entities.enrollments import EnrollmentRead, EnrollmentCreate
 from app.domain.models import User
 from app.infrastructure.course_teachers_service import CourseTeachersService
 from app.infrastructure.courses_service import CoursesService
-from app.infrastructure.dependencies import require_auth_user, require_teacher
+from app.infrastructure.dependencies import require_auth_user, require_teacher, require_admin
 from app.infrastructure.enrollments_service import EnrollmentsService
 
 courses_router = APIRouter()
@@ -24,7 +24,7 @@ courses_router = APIRouter()
 )
 async def get_all_courses(
         db: AsyncSession = Depends(get_db),
-        user: User = Depends(require_auth_user),
+        user: User = Depends(require_admin),
 ):
     courses_service = CoursesService(db)
     return await courses_service.get_all()
@@ -32,7 +32,7 @@ async def get_all_courses(
 
 @courses_router.post(
     '/',
-    response_model=Optional[CourseRead],
+    response_model=Optional[CourseCreated],
     summary='Create a new course',
     description='Create a new course',
 )

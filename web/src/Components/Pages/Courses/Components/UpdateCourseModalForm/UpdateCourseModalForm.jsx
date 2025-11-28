@@ -1,13 +1,14 @@
 import {Button, Col, Form, Input, Modal, Result, Row, Select, Spin} from "antd";
-import useCreateCourseModalForm from "./useCreateCourseModalForm.js";
+import useUpdateCourseModalForm from "./useUpdateCourseModalForm.js";
 import LoadingIndicator from "../../../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 
 const {Option} = Select;
 const {TextArea} = Input;
 
-const CreateCourseModal = () => {
+const UpdateCourseModal = () => {
     const {
-        openCreateCourseModal,
+        isModalOpen,
+        openUpdateCourseModal,
         handleCancel,
         handleOk,
         form,
@@ -15,12 +16,14 @@ const CreateCourseModal = () => {
         students,
         isLoading,
         isError,
-    } = useCreateCourseModalForm();
+    } = useUpdateCourseModalForm();
 
     if (isError) {
-        return <Modal visible={openCreateCourseModal} footer={null}>
-            <Result status="500" title="Ошибка загрузки"/>
-        </Modal>;
+        return (
+            <Modal open={openUpdateCourseModal} footer={null} onCancel={handleCancel}>
+                <Result status="500" title="Ошибка загрузки"/>
+            </Modal>
+        );
     }
 
     const filterOption = (input, option) =>
@@ -28,38 +31,33 @@ const CreateCourseModal = () => {
 
     return (
         <Modal
-            title="Создание курса"
-            open={openCreateCourseModal}
+            title="Редактирование курса"
+            open={isModalOpen}
             onCancel={handleCancel}
             width={900}
             footer={[
                 <Button key="cancel" onClick={handleCancel}>
                     Отмена
                 </Button>,
-                <Button
-                    key="submit"
-                    type="primary"
-                    loading={isLoading}
-                    onClick={handleOk}
-                >
-                    Создать курс
+                <Button key="submit" type="primary" loading={isLoading} onClick={handleOk}>
+                    Сохранить изменения
                 </Button>,
             ]}
         >
             {isLoading ? (
-                <LoadingIndicator/>
+                <LoadingIndicator />
             ) : (
                 <Form form={form} layout="vertical">
                     <Form.Item
                         name="title"
                         label="Название курса"
-                        rules={[{required: true, message: "Введите название курса"}]}
+                        rules={[{ required: true, message: "Введите название курса" }]}
                     >
-                        <Input size="large" placeholder="Введение в React"/>
+                        <Input size="large" />
                     </Form.Item>
 
-                    <Form.Item name="description" label="Описание (необязательно)">
-                        <TextArea rows={4} placeholder="Курс для начинающих разработчиков..."/>
+                    <Form.Item name="description" label="Описание">
+                        <TextArea rows={4} placeholder="Описание курса..." />
                     </Form.Item>
 
                     <Row gutter={16}>
@@ -67,9 +65,9 @@ const CreateCourseModal = () => {
                             <Form.Item name="teacher_ids" label="Преподаватели">
                                 <Select
                                     mode="multiple"
-                                    placeholder="Начните вводить ФИО или логин..."
-                                    loading={isLoading}
-                                    showSearch={{filterOption: filterOption}}
+                                    placeholder="Выберите преподавателей"
+                                    showSearch
+                                    filterOption={filterOption}
                                     notFoundContent="Преподаватели не найдены"
                                 >
                                     {teachers.map((teacher) => (
@@ -85,11 +83,9 @@ const CreateCourseModal = () => {
                             <Form.Item name="student_ids" label="Студенты">
                                 <Select
                                     mode="multiple"
+                                    placeholder="Выберите студентов"
                                     showSearch
-                                    placeholder="Начните вводить ФИО или логин..."
-                                    loading={isLoading}
                                     filterOption={filterOption}
-                                    optionFilterProp="children"
                                     notFoundContent="Студенты не найдены"
                                 >
                                     {students.map((student) => (
@@ -107,4 +103,4 @@ const CreateCourseModal = () => {
     );
 };
 
-export default CreateCourseModal;
+export default UpdateCourseModal;

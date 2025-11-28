@@ -79,7 +79,7 @@ const MainLayout = () => {
                         <Outlet/>
                     )}
                 </Content>
-                <Footer style={{textAlign: "center"}}>{new Date().getFullYear()}</Footer>
+                <Footer style={{textAlign: "center"}}>lectio © {new Date().getFullYear()}</Footer>
             </Layout>
         </Layout>
     )
