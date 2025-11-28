@@ -36,8 +36,6 @@ const useCreateUserModalForm = () => {
                 : null,
         };
 
-        console.log(payload);
-
         try {
             await registerUser(payload).unwrap();
             notification.success({

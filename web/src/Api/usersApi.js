@@ -13,6 +13,7 @@ export const usersApi = createApi({
         }),
         getAuthenticatedUserData: builder.query({
             query: () => "/users/me/",
+            providesTags: ["user"],
         }),
         updateUser: builder.mutation({
             query: ({userId, ...data}) => ({

@@ -42,7 +42,7 @@ class UsersService:
                 detail='Пользователь не найден',
             )
 
-        if current_user.id != user_model.id and not current_user.role.title != self.settings.root_role_name:
+        if current_user.id != user_model.id and current_user.role.title != self.settings.root_role_name:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail='Доступ запрещен',
@@ -53,6 +53,10 @@ class UsersService:
         user_model.patronymic = user.patronymic
         user_model.email = user.email
         user_model.birthdate = user.birthdate
+
+        if current_user.role.title == self.settings.root_role_name and user.role_id is not None:
+            user_model.role_id = user.role_id
+            user_model.status_id = user.status_id
 
         user_model = await self.users_repository.update(user_model)
 
@@ -68,7 +72,7 @@ class UsersService:
                 detail='Пользователь не найден',
             )
 
-        if current_user.id != user_model.id and not current_user.role.title != self.settings.root_role_name:
+        if current_user.id != user_model.id and current_user.role.title != self.settings.root_role_name:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail='Доступ запрещен',

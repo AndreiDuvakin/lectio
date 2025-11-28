@@ -4,6 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 from app.controllers.auth_router import auth_router
 from app.controllers.register_router import register_router
 from app.controllers.roles_router import roles_router
+from app.controllers.statuses_router import statuses_router
 from app.controllers.users_router import users_router
 from app.settings import Settings
 
@@ -23,6 +24,7 @@ def start_app():
     api_app.include_router(auth_router, prefix=f'{settings.prefix}/auth', tags=['auth'])
     api_app.include_router(register_router, prefix=f'{settings.prefix}/register', tags=['register'])
     api_app.include_router(roles_router, prefix=f'{settings.prefix}/roles', tags=['roles'])
+    api_app.include_router(statuses_router, prefix=f'{settings.prefix}/statuses', tags=['statuses'])
     api_app.include_router(users_router, prefix=f'{settings.prefix}/users', tags=['users'])
 
     return api_app

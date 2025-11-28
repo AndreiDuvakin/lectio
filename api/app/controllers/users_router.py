@@ -72,6 +72,7 @@ async def change_password(
     users_service = UsersService(db)
     return await users_service.change_password(user_id, password_data, user)
 
+
 @users_router.post(
     '/create/',
     response_model=Optional[UserRead],

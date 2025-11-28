@@ -34,8 +34,11 @@ class UserUpdate(BaseModel):
     first_name: str = Field(max_length=250)
     last_name: str = Field(max_length=250)
     patronymic: Optional[str] = Field(default=None, max_length=250)
+    login: str = Field(max_length=250)
     email: Optional[EmailStr] = None
     birthdate: date
+    role_id: Optional[int] = Field(default=None)
+    status_id: Optional[int] = Field(default=None)
 
 
 class PasswordChangeRequest(BaseModel):

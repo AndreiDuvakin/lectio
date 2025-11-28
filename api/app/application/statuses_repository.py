@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +9,11 @@ from app.domain.models.statuses import Status
 class StatusesRepository:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
+
+    async def get_all(self) -> Sequence[Status]:
+        query = select(Status)
+        results = await self.db.execute(query)
+        return results.scalars().all()
 
     async def get_by_id(self, status_id: int) -> Optional[Status]:
         query = (

@@ -3,6 +3,7 @@ import {ControlOutlined, PlusOutlined} from "@ant-design/icons";
 import useAdminPage from "./useAdminPage.js";
 import LoadingIndicator from "../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import CreateUserModalForm from "./CreateUserModalForm/CreateUserModalForm.jsx";
+import UpdateUserModalForm from "./UpdateUserModalForm/UpdateUserModalForm.jsx";
 
 const {Title} = Typography;
 
@@ -15,6 +16,7 @@ const AdminPage = () => {
         isLoading,
         isError,
         openCreateModal,
+        currentUser,
     } = useAdminPage();
 
     const columns = [
@@ -49,6 +51,13 @@ const AdminPage = () => {
         },
         {
             title: "Статус",
+            dataIndex: ["status", "title"],
+            key: "status",
+            filters: rolesData.map(status => ({text: status.title, value: status.title})),
+            onFilter: (value, record) => record.status.title === value,
+        },
+        {
+            title: "Статус",
             dataIndex: "status",
             key: "status",
         },
@@ -56,9 +65,9 @@ const AdminPage = () => {
             title: "Действия",
             key: "actions",
             render: (_, record) => (
-                <Button type="link" onClick={() => handleSelectUserToEdit(record)}>
+                (currentUser.id !== record.id ? (<Button type="link" onClick={() => handleSelectUserToEdit(record)}>
                     Редактировать
-                </Button>
+                </Button>) : null)
             ),
         },
     ];
@@ -97,6 +106,7 @@ const AdminPage = () => {
             </Col>
 
             <CreateUserModalForm/>
+            <UpdateUserModalForm/>
         </Row>
     )
 };

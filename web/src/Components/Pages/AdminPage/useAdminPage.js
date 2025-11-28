@@ -1,4 +1,4 @@
-import {useGetAllUsersQuery} from "../../../Api/usersApi.js";
+import {useGetAllUsersQuery, useGetAuthenticatedUserDataQuery} from "../../../Api/usersApi.js";
 import {useGetAllRolesQuery} from "../../../Api/rolesApi.js";
 import {useMemo, useState} from "react";
 import {useDispatch} from "react-redux";
@@ -7,6 +7,11 @@ import {setOpenModalCreateUser, setSelectedUserToUpdate} from "../../../Redux/Sl
 
 const useAdminPage = () => {
     const dispatch = useDispatch();
+    const {
+        data: currentUser = {},
+        isLoading: currentUserIsLoading,
+        isError: currentUserIsError,
+    } = useGetAuthenticatedUserDataQuery(undefined);
 
     const [
         searchString,
@@ -56,9 +61,10 @@ const useAdminPage = () => {
         rolesData,
         filteredUsers,
         handleSearch,
-        isLoading: usersIsLoading | rolesIsLoading,
-        isError: usersIsError | rolesIsError,
+        isLoading: usersIsLoading | rolesIsLoading | currentUserIsLoading,
+        isError: usersIsError | rolesIsError | currentUserIsError,
         openCreateModal,
+        currentUser,
     };
 };
 
