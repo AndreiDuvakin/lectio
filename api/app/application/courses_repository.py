@@ -1,10 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.domain.models import Course
+from app.domain.models import Course, CourseTeacher, Enrollment
 
 
 class CoursesRepository:
@@ -18,6 +18,32 @@ class CoursesRepository:
                 selectinload(Course.teachers),
                 selectinload(Course.enrollments)
             )
+        )
+        result = await self.db.execute(query)
+        return result.scalars().all()
+
+    async def get_all_for_teacher(self, user_id: int) -> Optional[Sequence[Course]]:
+        query = (
+            select(Course)
+            .options(
+                selectinload(Course.teachers),
+                selectinload(Course.enrollments)
+            )
+            .join(Course.teachers)
+            .filter(CourseTeacher.teacher_id == user_id)
+        )
+        result = await self.db.execute(query)
+        return result.scalars().all()
+
+    async def get_all_for_enrollment(self, user_id: int) -> Optional[Sequence[Course]]:
+        query = (
+            select(Course)
+            .options(
+                selectinload(Course.teachers),
+                selectinload(Course.enrollments)
+            )
+            .join(Course.enrollments)
+            .filter(Enrollment.user_id == user_id)
         )
         result = await self.db.execute(query)
         return result.scalars().all()

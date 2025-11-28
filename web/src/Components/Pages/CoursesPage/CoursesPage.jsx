@@ -71,8 +71,6 @@ const CoursesPage = () => {
                     {courses.map((course) => (
                         <Col xs={24} sm={12} lg={8} xl={6} key={course.id}>
                             <Card
-                                onClick={() => navigate(`/courses/${course.id}`)}
-
                                 hoverable
                                 cover={
                                     <div
@@ -85,6 +83,7 @@ const CoursesPage = () => {
                                             color: "white",
                                             fontSize: 48,
                                         }}
+                                        onClick={() => navigate(`/courses/${course.id}`)}
                                     >
                                         {course.title[0].toUpperCase()}
                                     </div>
@@ -103,6 +102,7 @@ const CoursesPage = () => {
                                 }
                             >
                                 <Card.Meta
+                                    onClick={() => navigate(`/courses/${course.id}`)}
                                     title={<Title level={4}>{course.title}</Title>}
                                     description={
                                         course.description || <Text type="secondary">Без описания</Text>

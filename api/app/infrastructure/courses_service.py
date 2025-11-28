@@ -4,16 +4,40 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.courses_repository import CoursesRepository
+from app.core.constants import UserRoles
 from app.domain.entities.courses import CourseRead, CourseCreate, CourseCreated
-from app.domain.models import Course
+from app.domain.models import Course, User
+from app.settings import Settings
 
 
 class CoursesService:
     def __init__(self, db: AsyncSession):
         self.courses_repository = CoursesRepository(db)
+        self.settings = Settings()
 
     async def get_all(self) -> List[CourseRead]:
         courses = await self.courses_repository.get_all()
+        response = []
+        for course in courses:
+            response.append(
+                CourseRead.model_validate(course)
+            )
+
+        return response
+
+    async def get_all_for_me(self, user: User) -> Optional[List[CourseRead]]:
+        if user.role.title == self.settings.root_role_name:
+            courses = await self.courses_repository.get_all()
+
+        elif user.role.title == UserRoles.TEACHER:
+            courses = await self.courses_repository.get_all_for_teacher(user.id)
+
+        elif user.role.title == UserRoles.STUDENT:
+            courses = await self.courses_repository.get_all_for_enrollment(user.id)
+
+        else:
+            courses = []
+
         response = []
         for course in courses:
             response.append(

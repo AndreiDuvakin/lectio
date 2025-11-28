@@ -1,5 +1,5 @@
 import {useGetAuthenticatedUserDataQuery} from "../../../Api/usersApi.js";
-import {useGetAllCoursesQuery} from "../../../Api/coursesApi.js";
+import {useGetAllCoursesQuery, useGetAllMyCoursesQuery} from "../../../Api/coursesApi.js";
 import CONFIG from "../../../Core/сonfig.js";
 import {ROLES} from "../../../Core/constants.js";
 import {useDispatch} from "react-redux";
@@ -11,7 +11,7 @@ const useCoursesPage = () => {
     const dispatch = useDispatch();
 
     const {data: userData, isLoading: isUserLoading} = useGetAuthenticatedUserDataQuery();
-    const {data: courses = [], isLoading, isCoursesLoading, isError} = useGetAllCoursesQuery(undefined, {
+    const {data: courses = [], isLoading, isCoursesLoading, isError} = useGetAllMyCoursesQuery(undefined, {
         pollingInterval: 20000,
     });
 

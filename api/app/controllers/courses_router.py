@@ -31,6 +31,20 @@ async def get_all_courses(
 
 
 @courses_router.get(
+    '/for-me/',
+    response_model=Optional[List[CourseRead]],
+    summary='Return all for current user',
+    description='Return all current user',
+)
+async def get_fors_for_teacher(
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_auth_user),
+):
+    courses_service = CoursesService(db)
+    return await courses_service.get_all_for_me(user)
+
+
+@courses_router.get(
     '/{course_id}/',
     response_model=Optional[CourseRead],
     summary='Return a specific course',

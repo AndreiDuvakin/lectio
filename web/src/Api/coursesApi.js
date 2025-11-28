@@ -14,6 +14,13 @@ export const coursesApi = createApi({
             }),
             providesTags: ['course'],
         }),
+        getAllMyCourses: builder.query({
+            query: () => ({
+                url: "/courses/for-me/",
+                method: "GET",
+            }),
+            providesTags: ['course'],
+        }),
         getCourseById: builder.query({
             query: (courseId) => ({
                 url: `/courses/${courseId}/`,
@@ -72,6 +79,7 @@ export const coursesApi = createApi({
 
 export const {
     useGetAllCoursesQuery,
+    useGetAllMyCoursesQuery,
     useGetCourseByIdQuery,
     useCreateCourseMutation,
     useUpdateCourseMutation,

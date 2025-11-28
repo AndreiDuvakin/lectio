@@ -28,6 +28,7 @@ import CONFIG from "../../../Core/сonfig.js";
 import LoadingIndicator from "../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import CreateLessonModalForm from "./Components/CreateLessonModalForm/CreateLessonModalForm.jsx";
 import ViewLessonModal from "./Components/ViewLessonModalForm/ViewLessonModal.jsx";
+import UpdateLessonModalForm from "./Components/UpdateLessonModalForm/UpdateLessonModalForm.jsx";
 
 
 const {Title, Text} = Typography;
@@ -76,7 +77,7 @@ const CourseDetailPage = () => {
                 <Empty
                     description="Пока нет лекций"
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    style={{ margin: "60px 0" }}
+                    style={{margin: "60px 0"}}
                 >
                     {isTeacherOrAdmin && (
                         <Button type="primary" size="large" onClick={handleCreateLesson}>
@@ -90,14 +91,11 @@ const CourseDetailPage = () => {
                         <Col xs={24} sm={12} lg={8} xl={6} key={lesson.id}>
                             <Card
                                 hoverable
-                                style={{ height: "100%", cursor: "pointer" }}
+                                style={{height: "100%", cursor: "pointer"}}
                                 onClick={() => handleOpenLesson(lesson)}
                                 title={
                                     <Space>
                                         <Text strong>{lesson.number}. {lesson.title}</Text>
-                                        {lesson.text && lesson.text.length > 100 && (
-                                            <Tag color="blue">Есть текст</Tag>
-                                        )}
                                     </Space>
                                 }
                                 extra={
@@ -105,7 +103,7 @@ const CourseDetailPage = () => {
                                         <Space onClick={(e) => e.stopPropagation()}>
                                             <Button
                                                 type="text"
-                                                icon={<EditOutlined />}
+                                                icon={<EditOutlined/>}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleEditLesson(lesson);
@@ -124,7 +122,7 @@ const CourseDetailPage = () => {
                                                 <Button
                                                     type="text"
                                                     danger
-                                                    icon={<DeleteOutlined />}
+                                                    icon={<DeleteOutlined/>}
                                                     onClick={(e) => e.stopPropagation()}
                                                 />
                                             </Popconfirm>
@@ -132,7 +130,7 @@ const CourseDetailPage = () => {
                                     )
                                 }
                             >
-                                <div style={{ marginBottom: 16 }}>
+                                <div style={{marginBottom: 16}}>
                                     {lesson.description ? (
                                         <Text type="secondary">{lesson.description}</Text>
                                     ) : (
@@ -140,11 +138,11 @@ const CourseDetailPage = () => {
                                     )}
                                 </div>
 
-                                <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8 }}>
-                                    <Avatar size="small" style={{ backgroundColor: "#1890ff" }}>
+                                <div style={{marginTop: 16, display: "flex", alignItems: "center", gap: 8}}>
+                                    <Avatar size="small" style={{backgroundColor: "#1890ff"}}>
                                         {userData?.first_name?.[0] || "У"}
                                     </Avatar>
-                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                    <Text type="secondary" style={{fontSize: 12}}>
                                         Создал: {lesson.creator?.first_name} {lesson.creator?.last_name}
                                     </Text>
                                 </div>
@@ -158,6 +156,7 @@ const CourseDetailPage = () => {
                 courseId={courseId}
             />
             <ViewLessonModal/>
+            <UpdateLessonModalForm/>
             {[CONFIG.ROOT_ROLE_NAME, ROLES.TEACHER].includes(userData.role.title) && (
                 <FloatButton.Group
                     placement={"left"}
