@@ -19,10 +19,12 @@ import useCoursesPage from "./useCoursesPage.js";
 import LoadingIndicator from "../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import CreateCourseModalForm from "./Components/CreateCourseModalForm/CreateCourseModalForm.jsx";
 import UpdateCourseModalForm from "./Components/UpdateCourseModalForm/UpdateCourseModalForm.jsx";
+import {useNavigate} from "react-router-dom";
 
 const {Title, Text} = Typography;
 
 const CoursesPage = () => {
+    const navigate = useNavigate();
     const {
         courses,
         isLoading,
@@ -69,6 +71,8 @@ const CoursesPage = () => {
                     {courses.map((course) => (
                         <Col xs={24} sm={12} lg={8} xl={6} key={course.id}>
                             <Card
+                                onClick={() => navigate(`/courses/${course.id}`)}
+
                                 hoverable
                                 cover={
                                     <div

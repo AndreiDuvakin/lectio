@@ -4,6 +4,7 @@ import CONFIG from "../../../Core/сonfig.js";
 import {ROLES} from "../../../Core/constants.js";
 import {useDispatch} from "react-redux";
 import {setOpenCreateCourseModal, setSelectedCourseToUpdate} from "../../../Redux/Slices/coursesSlice.js";
+import {useEffect} from "react";
 
 
 const useCoursesPage = () => {
@@ -24,6 +25,10 @@ const useCoursesPage = () => {
     const openEditModal = (course) => {
         dispatch(setSelectedCourseToUpdate(course));
     };
+
+    useEffect(() => {
+        window.document.title = "Система обучения lectio - Курсы";
+    }, []);
 
     return {
         courses,

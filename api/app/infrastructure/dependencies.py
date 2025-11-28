@@ -48,6 +48,7 @@ def require_admin(user: User = Depends(require_auth_user)):
 
 
 def require_teacher(user: User = Depends(require_auth_user)):
+    print(user.role.title, user.role.title not in [UserRoles.TEACHER, Settings().root_role_name], [UserRoles.TEACHER, Settings().root_role_name])
     if user.role.title not in [UserRoles.TEACHER, Settings().root_role_name]:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Ошибка доступа')
 

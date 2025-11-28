@@ -13,7 +13,7 @@ const useProfilePage = () => {
     const [passwordForm] = Form.useForm();
 
     useEffect(() => {
-        window.document.title = "Профиль";
+        window.document.title = "Система обучения lectio - Профиль";
     }, []);
 
     const {

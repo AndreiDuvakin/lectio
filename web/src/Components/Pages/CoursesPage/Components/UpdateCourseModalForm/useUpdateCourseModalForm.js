@@ -88,14 +88,14 @@ const useUpdateCourseModalForm = () => {
             }).unwrap();
 
             notification.success({
-                message: "Успех",
+                title: "Успех",
                 description: "Курс успешно обновлён!",
             });
 
             handleCancel();
         } catch (error) {
             notification.error({
-                message: "Ошибка",
+                title: "Ошибка",
                 description: error?.data?.detail || "Не удалось обновить курс",
             });
         }

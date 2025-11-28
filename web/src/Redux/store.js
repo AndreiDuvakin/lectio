@@ -2,11 +2,13 @@ import {configureStore} from "@reduxjs/toolkit";
 import authReducer from "./Slices/authSlice.js";
 import usersReducer from "./Slices/usersSlice.js";
 import coursesReducer from "./Slices/coursesSlice.js";
+import lessonReducer from "./Slices/lessonsSlice.js";
 import {authApi} from "../Api/authApi.js";
 import {usersApi} from "../Api/usersApi.js";
 import {rolesApi} from "../Api/rolesApi.js";
 import {statusesApi} from "../Api/statusesApi.js";
 import {coursesApi} from "../Api/coursesApi.js";
+import {lessonsApi} from "../Api/lessonsApi.js";
 
 export const store = configureStore({
     reducer: {
@@ -21,7 +23,10 @@ export const store = configureStore({
         [statusesApi.reducerPath]: statusesApi.reducer,
 
         courses: coursesReducer,
-        [coursesApi.reducerPath]: coursesApi.reducer
+        [coursesApi.reducerPath]: coursesApi.reducer,
+
+        lessons: lessonReducer,
+        [lessonsApi.reducerPath]: lessonsApi.reducer
     },
     middleware: (getDefaultMiddleware) => (
         getDefaultMiddleware().concat(
@@ -29,7 +34,8 @@ export const store = configureStore({
             usersApi.middleware,
             rolesApi.middleware,
             statusesApi.middleware,
-            coursesApi.middleware
+            coursesApi.middleware,
+            lessonsApi.middleware
         )
     ),
 });

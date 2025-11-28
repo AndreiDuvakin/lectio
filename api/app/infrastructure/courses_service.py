@@ -22,6 +22,13 @@ class CoursesService:
 
         return response
 
+    async def get_by_id(self, course_id: int) -> Optional[CourseRead]:
+        course = await self.courses_repository.get_by_id(course_id)
+        if course is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Курс с таким Id не найден')
+
+        return CourseRead.model_validate(course)
+
     async def create(self, course: CourseCreate) -> CourseCreated:  # ← возвращаем CourseCreated
         course_model = Course(
             title=course.title,
