@@ -3,7 +3,8 @@ import {Layout, Menu} from "antd";
 import CoursesPage from "../Pages/Courses/CoursesPage.jsx";
 import LoadingIndicator from "../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import {Outlet} from "react-router-dom";
-import {BookOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
+import {BookOutlined, ControlOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
+import CONFIG from "../../Core/сonfig.js";
 
 const {Content, Footer, Sider} = Layout;
 
@@ -22,10 +23,19 @@ const MainLayout = () => {
 
     const menuItems = [
         getItem("Мои курсы", "/courses", <BookOutlined/>),
-        getItem("Профиль", "/profile", <UserOutlined/>),
-        getItem("Выйти", "logout", <LogoutOutlined/>),
         {type: "divider"}
     ];
+
+    if (user.role.title === CONFIG.ROOT_ROLE_NAME) {
+        menuItems.push(
+            getItem("Панель администратора", "/admin", <ControlOutlined/>)
+        )
+    }
+
+    menuItems.push(
+        getItem("Профиль", "/profile", <UserOutlined/>),
+        getItem("Выйти", "logout", <LogoutOutlined/>),
+    )
 
     return (
         <Layout style={{minHeight: "100vh", margin: "-0.4vw"}}>

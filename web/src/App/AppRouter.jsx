@@ -5,6 +5,7 @@ import LoginPage from "../Components/Pages/LoginPage/LoginPage.jsx";
 import CoursesPage from "../Components/Pages/Courses/CoursesPage.jsx";
 import MainLayout from "../Components/Layouts/MainLayout.jsx";
 import ProfilePage from "../Components/Pages/ProfilePage/ProfilePage.jsx";
+import AdminPage from "../Components/Pages/AdminPage/AdminPage.jsx";
 
 
 const AppRouter = () => (
@@ -20,9 +21,9 @@ const AppRouter = () => (
         </Route>
 
         <Route element={<AdminRoute/>}>
-            {/*<Route element={<MainLayout />}>*/}
-            {/*    <Route path="/admin" element={<AdminPage />} />*/}
-            {/*</Route>*/}
+            <Route element={<MainLayout />}>
+                <Route path="/admin" element={<AdminPage />} />
+            </Route>
         </Route>
 
         <Route path={"*"} element={<Navigate to={"/"}/>}/>

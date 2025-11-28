@@ -2,6 +2,7 @@ import {Navigate, Outlet} from "react-router-dom";
 import {useGetAuthenticatedUserDataQuery} from "../Api/usersApi.js";
 import LoadingIndicator from "../Components/Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import {Result} from "antd";
+import CONFIG from "../Core/сonfig.js";
 
 const AdminRoute = () => {
     const {
@@ -24,7 +25,7 @@ const AdminRoute = () => {
         return <Navigate to="/login"/>;
     }
 
-    if (!user.role || user.role.title !== "root") {
+    if (!user.role || user.role.title !== CONFIG.ROOT_ROLE_NAME) {
         return <Navigate to="/"/>;
     }
 

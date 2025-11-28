@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,6 +14,15 @@ class UsersService:
     def __init__(self, db: AsyncSession):
         self.users_repository = UsersRepository(db)
         self.settings = Settings()
+
+    async def get_all(self) -> List[UserRead]:
+        users = await self.users_repository.get_all()
+        response = []
+
+        for user in users:
+            response.append(UserRead.model_validate(user))
+
+        return response
 
     async def get_by_id(self, user_id: int) -> UserRead:
         user = await self.users_repository.get_by_id(user_id)

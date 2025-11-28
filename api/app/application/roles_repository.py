@@ -10,10 +10,15 @@ class RolesRepository:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
+    async def get_all(self) -> list[Role]:
+        query = select(Role)
+        result = await self.db.execute(query)
+        return result.scalars().all()
+
     async def get_by_id(self, role_id: int) -> Optional[Role]:
         query = (
             select(Role)
-            .filter_by(role_id=role_id)
+            .filter_by(id=role_id)
         )
         result = await self.db.execute(query)
         return result.scalars().first()

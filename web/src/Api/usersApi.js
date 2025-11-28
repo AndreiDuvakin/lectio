@@ -7,6 +7,10 @@ export const usersApi = createApi({
     baseQuery: baseQueryWithAuth,
     tagTypes: ["user"],
     endpoints: (builder) => ({
+        getAllUsers: builder.query({
+            query: () => "/users/",
+            providesTags: ["user"],
+        }),
         getAuthenticatedUserData: builder.query({
             query: () => "/users/me/",
         }),
@@ -26,11 +30,21 @@ export const usersApi = createApi({
             }),
             invalidatesTags: ["user"],
         }),
+        createUser: builder.mutation({
+            query: (data) => ({
+                url: "/users/create/",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["user"],
+        }),
     }),
 });
 
 export const {
+    useGetAllUsersQuery,
     useGetAuthenticatedUserDataQuery,
     useUpdateUserMutation,
     useUpdateUserPasswordMutation,
+    useCreateUserMutation,
 } = usersApi;

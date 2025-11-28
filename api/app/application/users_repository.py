@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +9,11 @@ from app.domain.models.users import User
 class UsersRepository:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
+
+    async def get_all(self) -> List[User]:
+        query = select(User)
+        result = await self.db.execute(query)
+        return result.scalars().all()
 
     async def get_by_id(self, user_id: int) -> Optional[User]:
         query = (
