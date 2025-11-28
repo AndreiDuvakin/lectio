@@ -1,12 +1,12 @@
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {useLoginMutation} from "../../../Api/authApi.js";
-import {useEffect, useRef} from "react";
-import {notification} from "antd";
-import {checkAuth, setError, setUser} from "../../../Redux/Slices/authSlice.js";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from "../../../Api/authApi.js";
+import { useEffect, useRef } from "react";
+import { notification } from "antd";
+import { checkAuth, setError, setUser } from "../../../Redux/Slices/authSlice.js";
+import { message } from "antd";
 
-
-const useLoginPage = () => {
+const LoginPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loginUser, { isLoading }] = useLoginMutation();
@@ -14,7 +14,11 @@ const useLoginPage = () => {
     const hasRedirected = useRef(false);
 
     const pageContainerStyle = {
-        paddingTop: screen.xs ? "100px" : "200px",
+        width: 400,
+        padding: 24,
+        borderRadius: 8,
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "white",
     };
 
     useEffect(() => {
@@ -26,6 +30,7 @@ const useLoginPage = () => {
     }, [user, userData, isLoading, navigate]);
 
     const onFinish = async (loginData) => {
+        // РЕАЛЬНАЯ АВТОРИЗАЦИЯ
         try {
             const response = await loginUser(loginData).unwrap();
             const token = response.access_token || response.token;
@@ -50,8 +55,9 @@ const useLoginPage = () => {
 
     return {
         pageContainerStyle,
-        onFinish
+        onFinish,
+        isLoading
     };
 };
 
-export default useLoginPage;
+export default LoginPage;
