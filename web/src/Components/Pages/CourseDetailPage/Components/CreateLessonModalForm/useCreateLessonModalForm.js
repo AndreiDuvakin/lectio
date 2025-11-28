@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 import {setOpenModalCreateLesson} from "../../../../../Redux/Slices/lessonsSlice.js";
 import {Form, notification} from "antd";
-import {useMemo, useRef} from "react";
-import {useCreateLessonMutation} from "../../../../../Api/lessonsApi.js";
+import {useMemo, useRef, useState} from "react";
+import {useCreateLessonMutation, useUploadFileMutation} from "../../../../../Api/lessonsApi.js";
 
 
 const useCreateLessonModalForm = ({courseId}) => {
@@ -13,6 +13,8 @@ const useCreateLessonModalForm = ({courseId}) => {
     const [form] = Form.useForm();
 
     const [createLesson, {isLoading}] = useCreateLessonMutation();
+    const [draftFiles, setDraftFiles] = useState([]);
+    const [uploadFile] = useUploadFileMutation();
 
     const isModalOpen = openModalCreateLesson;
     const editorRef = useRef(null);
@@ -23,6 +25,24 @@ const useCreateLessonModalForm = ({courseId}) => {
             editorRef.current.value = "";
         }
         dispatch(setOpenModalCreateLesson(false));
+    };
+
+    const handleAddFile = (file) => {
+        const maxSize = 50 * 1024 * 1024; // 50 мегабайт
+        if (file.size > maxSize) {
+            notification.error({
+                message: "Ошибка вставки",
+                description: "Файл слишком большой.",
+                placement: "topRight",
+            });
+            return false;
+        }
+        setDraftFiles((prev) => [...prev, file]);
+        return false;
+    };
+
+    const handleRemoveFile = (file) => {
+        setDraftFiles((prev) => prev.filter((f) => f.uid !== file.uid));
     };
 
     const handleOk = async () => {
@@ -37,10 +57,29 @@ const useCreateLessonModalForm = ({courseId}) => {
                 number: values.number || 1,
             };
 
-            await createLesson({
+             const response = await createLesson({
                 courseId,
                 lessonData,
             }).unwrap();
+
+            for (const file of draftFiles) {
+                try {
+                    await uploadFile({
+                        lesson_id: response.id,
+                        fileData: file,
+                    }).unwrap();
+                } catch (error) {
+                    console.error(`Error uploading file ${file.name}:`, error);
+                    const errorMessage = error.data?.detail
+                        ? JSON.stringify(error.data.detail, null, 2)
+                        : JSON.stringify(error.data || error.message || "Неизвестная ошибка", null, 2);
+                    notification.error({
+                        title: "Ошибка загрузки файла",
+                        description: `Не удалось загрузить файл ${file.name}: ${errorMessage}`,
+                        placement: "topRight",
+                    });
+                }
+            }
 
             notification.success({
                 title: "Успех",
@@ -130,6 +169,9 @@ const useCreateLessonModalForm = ({courseId}) => {
         joditConfig,
         editorRef,
         handleOk,
+        handleAddFile,
+        handleRemoveFile,
+        draftFiles,
     }
 };
 

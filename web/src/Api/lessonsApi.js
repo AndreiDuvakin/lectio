@@ -44,6 +44,43 @@ export const lessonsApi = createApi({
             }),
             invalidatesTags: ["lesson"],
         }),
+        getLessonFilesList: builder.query({
+            query: (lessonId) => ({
+                url: `/lessons/files/${lessonId}/`,
+                method: "GET",
+            }),
+            providesTags: ["lesson"],
+        }),
+        getDownloadFile: builder.query({
+            query: (fileId) => ({
+                url: `/lessons/file/${fileId}/`,
+                method: "GET",
+            }),
+            providesTags: ["lesson"],
+        }),
+        uploadFile: builder.mutation({
+            query: ({lesson_id, fileData}) => {
+                if (!(fileData instanceof File)) {
+                    throw new Error('Invalid file object');
+                }
+                const formData = new FormData();
+                formData.append('file', fileData);
+                return {
+                    url: `/lessons/files/${lesson_id}/upload/`,
+                    method: 'POST',
+                    formData: true,
+                    body: formData,
+                };
+            },
+            invalidatesTags: ["lesson"],
+        }),
+        deleteFile: builder.mutation({
+            query: (fileId) => ({
+                url: `/lessons/files/${fileId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["lesson"],
+        }),
     }),
 });
 
@@ -53,4 +90,7 @@ export const {
     useCreateLessonMutation,
     useUpdateLessonMutation,
     useDeleteLessonMutation,
+    useGetLessonFilesListQuery,
+    useGetDownloadFileQuery,
+    useUploadFileMutation,
 } = lessonsApi;

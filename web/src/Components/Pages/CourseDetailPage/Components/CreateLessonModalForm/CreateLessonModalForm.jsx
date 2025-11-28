@@ -1,6 +1,7 @@
 import useCreateLessonModalForm from "./useCreateLessonModalForm.js";
 import {Button, Form, Input, InputNumber, Modal, Upload} from "antd";
 import JoditEditor from "jodit-react";
+import {UploadOutlined} from "@ant-design/icons";
 
 const {TextArea} = Input;
 
@@ -13,6 +14,9 @@ const CreateLessonModalForm = ({courseId}) => {
         joditConfig,
         editorRef,
         isLoading,
+        handleAddFile,
+        handleRemoveFile,
+        draftFiles,
     } = useCreateLessonModalForm({courseId});
 
     return (
@@ -60,6 +64,21 @@ const CreateLessonModalForm = ({courseId}) => {
                             config={joditConfig}
                         />
                     </div>
+                </Form.Item>
+
+                <Form.Item name="files" label="Прикрепить файлы">
+                    <Upload
+                        fileList={draftFiles}
+                        beforeUpload={(file) => {
+                            handleAddFile(file);
+                            return false;
+                        }}
+                        onRemove={(file) => handleRemoveFile(file)}
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        multiple
+                    >
+                        <Button icon={<UploadOutlined/>}>Выбрать файлы</Button>
+                    </Upload>
                 </Form.Item>
             </Form>
         </Modal>
