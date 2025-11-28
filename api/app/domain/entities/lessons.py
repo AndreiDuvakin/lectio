@@ -1,6 +1,8 @@
 from typing import Optional
 from pydantic import BaseModel, Field
 
+from app.domain.entities.users import UserRead
+
 
 class LessonBase(BaseModel):
     title: str = Field(..., max_length=250)
@@ -10,7 +12,7 @@ class LessonBase(BaseModel):
 
 
 class LessonCreate(LessonBase):
-    course_id: int
+    pass
 
 
 class LessonUpdate(BaseModel):
@@ -24,6 +26,8 @@ class LessonRead(LessonBase):
     id: int
     course_id: int
     creator_id: int
+
+    creator: UserRead
 
     class Config:
         from_attributes = True

@@ -2,20 +2,60 @@ import {useDispatch, useSelector} from "react-redux";
 import {setOpenModalCreateLesson} from "../../../../../Redux/Slices/lessonsSlice.js";
 import {Form, notification} from "antd";
 import {useMemo, useRef} from "react";
+import {useCreateLessonMutation} from "../../../../../Api/lessonsApi.js";
 
 
-const useCreateLessonModalForm = () => {
+const useCreateLessonModalForm = ({courseId}) => {
     const dispatch = useDispatch();
     const {
         openModalCreateLesson
     } = useSelector((state) => state.lessons);
     const [form] = Form.useForm();
 
+    const [createLesson, {isLoading}] = useCreateLessonMutation();
+
     const isModalOpen = openModalCreateLesson;
     const editorRef = useRef(null);
 
     const handleCancel = () => {
+        form.resetFields();
+        if (editorRef.current) {
+            editorRef.current.value = "";
+        }
         dispatch(setOpenModalCreateLesson(false));
+    };
+
+    const handleOk = async () => {
+        try {
+            const values = await form.validateFields();
+            const content = editorRef.current?.value || "";
+
+            const lessonData = {
+                title: values.title,
+                description: values.description || null,
+                text: content,
+                number: values.number || 1,
+            };
+
+            await createLesson({
+                courseId,
+                lessonData,
+            }).unwrap();
+
+            notification.success({
+                title: "Успех",
+                description: "Лекция успешно создана!",
+                placement: "topRight",
+            });
+
+            handleCancel();
+        } catch (error) {
+            notification.error({
+                title: "Ошибка",
+                description: error?.data?.detail || "Не удалось создать лекцию",
+                placement: "topRight",
+            });
+        }
     };
 
     const joditConfig = useMemo(
@@ -89,6 +129,7 @@ const useCreateLessonModalForm = () => {
         form,
         joditConfig,
         editorRef,
+        handleOk,
     }
 };
 

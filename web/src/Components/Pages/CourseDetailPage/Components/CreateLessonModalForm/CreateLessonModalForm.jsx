@@ -1,77 +1,68 @@
 import useCreateLessonModalForm from "./useCreateLessonModalForm.js";
 import {Button, Form, Input, InputNumber, Modal, Upload} from "antd";
 import JoditEditor from "jodit-react";
-import {UploadOutlined} from "@ant-design/icons";
 
+const {TextArea} = Input;
 
-const CreateLessonModalForm = () => {
+const CreateLessonModalForm = ({courseId}) => {
     const {
         isModalOpen,
         handleCancel,
+        handleOk,
         form,
         joditConfig,
         editorRef,
-    } = useCreateLessonModalForm();
+        isLoading,
+    } = useCreateLessonModalForm({courseId});
 
     return (
         <Modal
+            title="Создание лекционного материала"
             open={isModalOpen}
             onCancel={handleCancel}
-            footer={null}
-            title={"Создание лекционного материала"}
-            style={{
-                minWidth: "70%",
-                minHeight: "80%",
-            }}
+            width={1000}
+            footer={[
+                <Button key="cancel" onClick={handleCancel}>
+                    Отмена
+                </Button>,
+                <Button
+                    key="submit"
+                    type="primary"
+                    loading={isLoading}
+                    onClick={handleOk}
+                >
+                    Создать лекцию
+                </Button>,
+            ]}
+            destroyOnHidden
         >
-            <Form
-                name={"lesson"}
-                form={form}
-                layout={"vertical"}
-            >
+            <Form form={form} layout="vertical" preserve={false}>
                 <Form.Item
                     name="title"
-                    label="Название"
-                    rules={[{required: true, message: "Пожалуйста, введите название"}]}
+                    label="Название лекции"
+                    rules={[{required: true, message: "Введите название лекции"}]}
                 >
-                    <Input/>
+                    <Input size="large" placeholder="Введение в JavaScript"/>
                 </Form.Item>
-                <Form.Item
-                    name="description"
-                    label="Описание"
-                >
-                    <Input/>
+
+                <Form.Item name="description" label="Краткое описание">
+                    <TextArea rows={2} placeholder="О чём эта лекция..."/>
                 </Form.Item>
-                <Form.Item
-                    name="text"
-                    label="Текстовый материал"
-                >
-                    <div className="jodit-container">
+
+                <Form.Item name="number" label="Порядковый номер" initialValue={1}>
+                    <InputNumber min={1} style={{width: "100%"}}/>
+                </Form.Item>
+
+                <Form.Item label="Содержание лекции">
+                    <div style={{border: "1px solid #d9d9d9", borderRadius: 6}}>
                         <JoditEditor
                             ref={editorRef}
                             config={joditConfig}
                         />
                     </div>
                 </Form.Item>
-                <Form.Item
-                    name="number"
-                    label="Порядковый номер отображения"
-                >
-                    <InputNumber min={1} defaultValue={1}/>
-                </Form.Item>
-                <Form.Item name="files" label="Прикрепить файлы">
-                    <Upload
-                        multiple
-                    >
-                        <Button icon={<UploadOutlined/>}>Выбрать файлы</Button>
-                    </Upload>
-                </Form.Item>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">Сохранить</Button>
-                </Form.Item>
             </Form>
         </Modal>
-    )
+    );
 };
-
 export default CreateLessonModalForm;
