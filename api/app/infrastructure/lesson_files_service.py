@@ -20,15 +20,15 @@ class LessonFilesService:
         self.lessons_repository = LessonsRepository(db)
 
     async def get_file_by_id(self, file_id: int) -> FileResponse:
-        lesson_file = self.lesson_files_repository.get_by_id(file_id)
+        lesson_file = await self.lesson_files_repository.get_by_id(file_id)
 
         if not lesson_file:
             raise HTTPException(404, "Файл с таким ID не найден")
 
         return FileResponse(
-            lesson_file.filename,
+            lesson_file.file_path,
             media_type=self.get_media_type(lesson_file.filename),
-            filename=os.path.basename(lesson_file.file_path),
+            filename=os.path.basename(lesson_file.filename),
         )
 
     async def get_files_list_by_lesson(self, lesson_id: int) -> List[ReadLessonFile]:
@@ -58,8 +58,8 @@ class LessonFilesService:
         file_path = await self.save_file(file, f'uploads/lessons/{lesson.id}')
 
         lesson_file_model = LessonFile(
-            filename=file_path,
-            file_path=file.filename,
+            filename=file.filename,
+            file_path=file_path,
             lesson_id=lesson.id,
         )
 

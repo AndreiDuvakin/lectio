@@ -1,5 +1,5 @@
 import useViewLessonModal from "./useViewLessonModal.js";
-import {Avatar, Button, Col, Divider, Modal, Space, Typography} from "antd";
+import {Avatar, Button, Col, Divider, Modal, Popconfirm, Row, Space, Spin, Typography} from "antd";
 import {CloseOutlined, UserOutlined} from "@ant-design/icons";
 
 
@@ -10,6 +10,11 @@ const ViewLessonModal = () => {
         selectedLessonToView,
         modalIsOpen,
         handleClose,
+        currentLessonFiles,
+        isCurrentLessonFilesLoading,
+        isCurrentLessonFilesError,
+        downloadFile,
+        downloadingFiles
     } = useViewLessonModal();
 
     return (
@@ -72,6 +77,30 @@ const ViewLessonModal = () => {
             )}
 
             <Divider/>
+            <Title level={3}>Прикрепленные файлы</Title>
+            {isCurrentLessonFilesLoading ? (
+                <Spin/>
+            ) : currentLessonFiles.length > 0 ? (
+                currentLessonFiles.map((file) => (
+                    <Row key={file.id} align="middle" justify="space-between">
+                        <span>{file.filename || "Не указан"}</span>
+                        <div>
+                            <Button
+                                onClick={() => downloadFile(file.id, file.filename)}
+                                loading={downloadingFiles[file.id] || false}
+                                disabled={downloadingFiles[file.id] || false}
+                                type={"dashed"}
+                                style={{marginRight: 8}}
+                            >
+                                {downloadingFiles[file.id] ? "Загрузка..." : "Скачать"}
+                            </Button>
+                        </div>
+                        <Divider/>
+                    </Row>
+                ))
+            ) : (
+                <p>Файлы отсутствуют</p>
+            )}
 
             <div style={{textAlign: "right"}}>
                 <Button onClick={handleClose}>

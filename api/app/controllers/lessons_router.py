@@ -95,7 +95,7 @@ async def delete_lesson(
 
 @lessons_router.get(
     '/files/{lesson_id}/',
-    response_model=Optional[ReadLessonFile],
+    response_model=Optional[List[ReadLessonFile]],
     summary='Get a files list by lesson ID',
     description='Get a files list by lesson ID',
 )
@@ -111,8 +111,6 @@ async def get_files(
 @lessons_router.get(
     '/file/{file_id}/',
     response_class=FileResponse,
-    summary='Get a file by ID',
-    description='Get a file by ID',
 )
 async def get_file(
         file_id: int,

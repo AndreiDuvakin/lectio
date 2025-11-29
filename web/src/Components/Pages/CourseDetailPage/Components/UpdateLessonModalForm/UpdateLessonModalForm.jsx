@@ -1,7 +1,8 @@
 import useUpdateLessonModalForm from "./useUpdateLessonModalForm.js";
-import {Button, Form, Input, InputNumber, Modal, Upload} from "antd";
+import {Button, Divider, Form, Input, InputNumber, Modal, Popconfirm, Row, Spin, Upload} from "antd";
 import JoditEditor from "jodit-react";
 import LoadingIndicator from "../../../../Widgets/LoadingIndicator/LoadingIndicator.jsx";
+import {UploadOutlined} from "@ant-design/icons";
 
 const {TextArea} = Input;
 
@@ -16,6 +17,15 @@ const UpdateLessonModalForm = ({courseId}) => {
         isLoading,
         initialContent,
         currentLesson,
+        isFilesLoading,
+        downloadFile,
+        files,
+        downloadingFiles,
+        deletingFiles,
+        deleteFile,
+        draftFiles,
+        handleAddFile,
+        handleRemoveFile,
     } = useUpdateLessonModalForm({courseId});
 
     if (isLoading) {
@@ -70,6 +80,57 @@ const UpdateLessonModalForm = ({courseId}) => {
                             config={joditConfig}
                         />
                     </div>
+                </Form.Item>
+
+                {isFilesLoading ? (
+                    <Spin/>
+                ) : files.length > 0 ? (
+                    files.map((file) => (
+                        <Row key={file.id} align="middle" justify="space-between">
+                            <span>{file.filename || "Не указан"}</span>
+                            <div>
+                                <Button
+                                    onClick={() => downloadFile(file.id, file.filename)}
+                                    loading={downloadingFiles[file.id] || false}
+                                    disabled={downloadingFiles[file.id] || deletingFiles[file.id] || false}
+                                    type={"dashed"}
+                                    style={{marginRight: 8}}
+                                >
+                                    {downloadingFiles[file.id] ? "Загрузка..." : "Скачать"}
+                                </Button>
+                                <Popconfirm
+                                    title={"Вы уверены, что хотите удалить файл?"}
+                                    onConfirm={() => deleteFile(file.id, file.filename)}
+                                >
+                                    <Button
+                                        loading={deletingFiles[file.id] || false}
+                                        disabled={deletingFiles[file.id] || downloadingFiles[file.id] || false}
+                                        type={"dashed"}
+                                        danger
+                                    >
+                                        {deletingFiles[file.id] ? "Удаление..." : "Удалить"}
+                                    </Button>
+                                </Popconfirm>
+                            </div>
+                            <Divider/>
+                        </Row>
+                    ))
+                ) : (
+                    <p>Файлы отсутствуют</p>
+                )}
+                <Form.Item name="files" label="Прикрепить файлы">
+                    <Upload
+                        fileList={draftFiles}
+                        beforeUpload={(file) => {
+                            handleAddFile(file);
+                            return false;
+                        }}
+                        onRemove={(file) => handleRemoveFile(file)}
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        multiple
+                    >
+                        <Button icon={<UploadOutlined/>}>Выбрать файлы</Button>
+                    </Upload>
                 </Form.Item>
             </Form>
         </Modal>

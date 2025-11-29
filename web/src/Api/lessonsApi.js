@@ -93,4 +93,5 @@ export const {
     useGetLessonFilesListQuery,
     useGetDownloadFileQuery,
     useUploadFileMutation,
+    useDeleteFileMutation,
 } = lessonsApi;
