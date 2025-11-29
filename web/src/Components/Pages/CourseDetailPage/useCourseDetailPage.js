@@ -11,6 +11,12 @@ import {useDeleteLessonMutation, useGetLessonsByCourseIdQuery} from "../../../Ap
 import {ROLES} from "../../../Core/constants.js";
 import CONFIG from "../../../Core/сonfig.js";
 import {notification} from "antd";
+import {
+    setOpenModalCreateTask,
+    setSelectedTaskToUpdate,
+    setSelectedTaskToView
+} from "../../../Redux/Slices/tasksSlice.js";
+import {useGetTasksByCourseIdQuery} from "../../../Api/tasksApi.js";
 
 
 const useCourseDetailPage = (courseId) => {
@@ -33,10 +39,18 @@ const useCourseDetailPage = (courseId) => {
     });
 
     const {
-        data: lessonsData,
+        data: lessonsData = [],
         isLoading: isLessonsLoading,
         isError: isLessonsError,
     } = useGetLessonsByCourseIdQuery(courseId, {
+        pollingInterval: 10000,
+    });
+
+    const {
+        data: tasksData = [],
+        isLoading: isTasksLoading,
+        isError: isTasksError
+    } = useGetTasksByCourseIdQuery(courseId, {
         pollingInterval: 10000,
     });
 
@@ -62,6 +76,10 @@ const useCourseDetailPage = (courseId) => {
         }
     };
 
+    const handleDeleteTask = async (taskId) => {
+
+    };
+
     useEffect(() => {
         window.document.title = `Система обучения lectio - Курс: ${courseData?.title}`;
     }, [courseData]);
@@ -80,17 +98,34 @@ const useCourseDetailPage = (courseId) => {
         dispatch(setSelectedLessonToUpdate(lesson))
     };
 
+    const handleCreateTask = () => {
+        dispatch(setOpenModalCreateTask(true))
+    };
+
+    const handleOpenTask = (task) => {
+        dispatch(setSelectedTaskToView(task))
+    };
+
+    const handleEditTask = (task) => {
+        dispatch(setSelectedTaskToUpdate(task))
+    };
+
     return {
+        tasksData,
         isTeacherOrAdmin,
         lessonsData,
         userData,
         courseData,
-        isLoading: isUserLoading || isCourseLoading || isLessonsLoading,
-        isError: isUserError || isCourseError || isLessonsError,
+        isLoading: isUserLoading || isCourseLoading || isLessonsLoading || isTasksLoading,
+        isError: isUserError || isCourseError || isLessonsError || isTasksError,
         handleCreateLesson,
         handleOpenLesson,
         handleEditLesson,
         handleDeleteLesson,
+        handleCreateTask,
+        handleOpenTask,
+        handleEditTask,
+        handleDeleteTask,
     }
 };
 

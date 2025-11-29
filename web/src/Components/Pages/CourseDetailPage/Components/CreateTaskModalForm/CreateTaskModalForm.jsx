@@ -1,11 +1,11 @@
-import useCreateLessonModalForm from "./useCreateLessonModalForm.js";
+import useCreateTaskModalForm from "./useCreateTaskModalForm.js";
 import {Button, Form, Input, InputNumber, Modal, Upload} from "antd";
 import JoditEditor from "jodit-react";
 import {UploadOutlined} from "@ant-design/icons";
 
 const {TextArea} = Input;
 
-const CreateLessonModalForm = ({courseId}) => {
+const CreateTaskModalForm = ({courseId}) => {
     const {
         isModalOpen,
         handleCancel,
@@ -17,11 +17,11 @@ const CreateLessonModalForm = ({courseId}) => {
         handleAddFile,
         handleRemoveFile,
         draftFiles,
-    } = useCreateLessonModalForm({courseId});
+    } = useCreateTaskModalForm({courseId});
 
     return (
         <Modal
-            title="Создание лекционного материала"
+            title="Создание задания"
             open={isModalOpen}
             onCancel={handleCancel}
             width={1000}
@@ -35,7 +35,7 @@ const CreateLessonModalForm = ({courseId}) => {
                     loading={isLoading}
                     onClick={handleOk}
                 >
-                    Создать лекцию
+                    Создать задание
                 </Button>,
             ]}
             destroyOnHidden
@@ -43,21 +43,21 @@ const CreateLessonModalForm = ({courseId}) => {
             <Form form={form} layout="vertical" preserve={false}>
                 <Form.Item
                     name="title"
-                    label="Название лекции"
-                    rules={[{required: true, message: "Введите название лекции"}]}
+                    label="Название задания"
+                    rules={[{required: true, message: "Введите название задания"}]}
                 >
                     <Input size="large"/>
                 </Form.Item>
 
-                <Form.Item name="description" label="Краткое описание">
-                    <TextArea rows={2} placeholder="О чём эта лекция..."/>
+                <Form.Item name="description" label="Краткое описание заачи">
+                    <TextArea rows={2} placeholder="Что нужно будет сделать..."/>
                 </Form.Item>
 
                 <Form.Item name="number" label="Порядковый номер" initialValue={1}>
                     <InputNumber min={1} style={{width: "100%"}}/>
                 </Form.Item>
 
-                <Form.Item label="Содержание лекции">
+                <Form.Item label="Содержание задания">
                     <div style={{border: "1px solid #d9d9d9", borderRadius: 6}}>
                         <JoditEditor
                             ref={editorRef}
@@ -83,4 +83,4 @@ const CreateLessonModalForm = ({courseId}) => {
         </Modal>
     );
 };
-export default CreateLessonModalForm;
+export default CreateTaskModalForm;

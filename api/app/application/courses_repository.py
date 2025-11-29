@@ -43,7 +43,7 @@ class CoursesRepository:
                 selectinload(Course.enrollments)
             )
             .join(Course.enrollments)
-            .filter(Enrollment.user_id == user_id)
+            .filter(Enrollment.student_id == user_id)
         )
         result = await self.db.execute(query)
         return result.scalars().all()

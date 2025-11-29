@@ -1,22 +1,22 @@
 import {useDispatch, useSelector} from "react-redux";
-import {setOpenModalCreateLesson} from "../../../../../Redux/Slices/lessonsSlice.js";
 import {Form, notification} from "antd";
 import {useMemo, useRef, useState} from "react";
-import {useCreateLessonMutation, useUploadFileMutation} from "../../../../../Api/lessonsApi.js";
+import {setOpenModalCreateTask} from "../../../../../Redux/Slices/tasksSlice.js";
+import {useCreateTaskMutation, useUploadFileMutation} from "../../../../../Api/tasksApi.js";
 
 
-const useCreateLessonModalForm = ({courseId}) => {
+const useCreateTaskModalForm = ({courseId}) => {
     const dispatch = useDispatch();
     const {
-        openModalCreateLesson
-    } = useSelector((state) => state.lessons);
+        openModalCreateTask
+    } = useSelector((state) => state.tasks);
     const [form] = Form.useForm();
 
-    const [createLesson, {isLoading}] = useCreateLessonMutation();
+    const [createtask, {isLoading}] = useCreateTaskMutation();
     const [draftFiles, setDraftFiles] = useState([]);
     const [uploadFile] = useUploadFileMutation();
 
-    const isModalOpen = openModalCreateLesson;
+    const isModalOpen = openModalCreateTask;
     const editorRef = useRef(null);
 
     const handleCancel = () => {
@@ -24,7 +24,7 @@ const useCreateLessonModalForm = ({courseId}) => {
         if (editorRef.current) {
             editorRef.current.value = "";
         }
-        dispatch(setOpenModalCreateLesson(false));
+        dispatch(setOpenModalCreateTask(false));
     };
 
     const handleAddFile = (file) => {
@@ -50,22 +50,22 @@ const useCreateLessonModalForm = ({courseId}) => {
             const values = await form.validateFields();
             const content = editorRef.current?.value || "";
 
-            const lessonData = {
+            const taskData = {
                 title: values.title,
                 description: values.description || null,
                 text: content,
                 number: values.number || 1,
             };
 
-             const response = await createLesson({
+             const response = await createtask({
                 courseId,
-                lessonData,
+                taskData,
             }).unwrap();
 
             for (const file of draftFiles) {
                 try {
                     await uploadFile({
-                        lesson_id: response.id,
+                        task_id: response.id,
                         fileData: file,
                     }).unwrap();
                 } catch (error) {
@@ -83,7 +83,7 @@ const useCreateLessonModalForm = ({courseId}) => {
 
             notification.success({
                 title: "Успех",
-                description: "Лекция успешно создана!",
+                description: "Задание успешно создано!",
                 placement: "topRight",
             });
 
@@ -91,7 +91,7 @@ const useCreateLessonModalForm = ({courseId}) => {
         } catch (error) {
             notification.error({
                 title: "Ошибка",
-                description: error?.data?.detail || "Не удалось создать лекцию",
+                description: error?.data?.detail || "Не удалось создать задание",
                 placement: "topRight",
             });
         }
@@ -118,7 +118,7 @@ const useCreateLessonModalForm = ({courseId}) => {
             askBeforePasteFromWord: false,
             defaultActionOnPaste: "insert_clear_html",
             spellcheck: true,
-            placeholder: "Заполните содержимое лекционного материала",
+            placeholder: "Заполните содержимое задания",
             showCharsCounter: true,
             showWordsCounter: true,
             showXPathInStatusbar: false,
@@ -175,4 +175,4 @@ const useCreateLessonModalForm = ({courseId}) => {
     }
 };
 
-export default useCreateLessonModalForm;
+export default useCreateTaskModalForm;

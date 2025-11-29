@@ -228,7 +228,7 @@ const useUpdateLessonModalForm = () => {
             askBeforePasteFromWord: false,
             defaultActionOnPaste: "insert_clear_html",
             spellcheck: true,
-            placeholder: "Введите результаты приёма...",
+            placeholder: "Заполните содержимое лекционного материала",
             showCharsCounter: true,
             showWordsCounter: true,
             showXPathInStatusbar: false,

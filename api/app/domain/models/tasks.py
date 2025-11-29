@@ -18,6 +18,6 @@ class Task(RootTable):
     creator_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
 
     course: Mapped['Course'] = relationship('Course', back_populates='tasks')
-    creator: Mapped['User'] = relationship('User', back_populates='created_tasks')
+    creator: Mapped['User'] = relationship('User', back_populates='created_tasks', lazy='joined')
 
     files: Mapped[List['TaskFile']] = relationship('TaskFile', back_populates='task')

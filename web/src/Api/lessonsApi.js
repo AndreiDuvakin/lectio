@@ -13,6 +13,13 @@ export const lessonsApi = createApi({
                 method: "GET",
             }),
             providesTags: ["lesson"],
+            transformResponse: (response) => {
+                return response.map(lesson => ({
+                    ...lesson,
+                    contentType: "lesson",
+                    __typename: "Lesson"
+                }));
+            },
         }),
         getLessonById: builder.query({
             query: (lessonId) => ({

@@ -126,7 +126,6 @@ const UpdateLessonModalForm = ({courseId}) => {
                             return false;
                         }}
                         onRemove={(file) => handleRemoveFile(file)}
-                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                         multiple
                     >
                         <Button icon={<UploadOutlined/>}>Выбрать файлы</Button>
