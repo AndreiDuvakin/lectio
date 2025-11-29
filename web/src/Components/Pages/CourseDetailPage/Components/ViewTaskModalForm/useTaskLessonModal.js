@@ -103,7 +103,7 @@ const useViewTaskModal = () => {
                     });
                 }
             }
-
+            setDraftFiles([]);
             notification.success({
                 title: "Успех",
                 description: "Задание успешно создано!",
@@ -114,6 +114,7 @@ const useViewTaskModal = () => {
                 editorRef.current.value = "";
             }
         } catch (error) {
+            console.error(error)
             notification.error({
                 title: "Ошибка",
                 description: error?.data?.detail || "Не удалось создать задание",

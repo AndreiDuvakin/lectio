@@ -144,34 +144,34 @@ const ViewTaskModal = () => {
                                 <Panel
                                     key={solution.id}
                                     header={
-                                            <Flex justify="space-between" align="center">
-                                                <Text strong>Решение
-                                                    от {new Date(solution.created_at).toLocaleString("ru-RU")}</Text>
-                                                {solution.assessment !== null ? (
-                                                    <Tag
-                                                        color={solution.assessment >= 80 ? "green" : solution.assessment >= 60 ? "orange" : "red"}>
-                                                        Оценка: {solution.assessment} / 100
-                                                    </Tag>
-                                                ) : (
-                                                    <Tag color="blue">На проверке</Tag>
-                                                )}
+                                        <Flex justify="space-between" align="center">
+                                            <Text strong>Решение
+                                                от {new Date(solution.created_at).toLocaleString("ru-RU")}</Text>
+                                            {solution.assessment !== null ? (
+                                                <Tag
+                                                    color={solution.assessment >= 80 ? "green" : solution.assessment >= 60 ? "orange" : "red"}>
+                                                    Оценка: {solution.assessment} / 100
+                                                </Tag>
+                                            ) : (
+                                                <Tag color="blue">На проверке</Tag>
+                                            )}
 
-                                                <Popconfirm
-                                                    title={`Удалить ответ на задание?`}
-                                                    description="Это действие нельзя отменить"
-                                                    onConfirm={(e) => {
-                                                        handleDeleSolution(solution.id)
-                                                    }}
-                                                    okText="Удалить"
-                                                    cancelText="Отмена"
-                                                >
-                                                    <Button
-                                                        type="text"
-                                                        danger
-                                                        icon={<DeleteOutlined/>}
-                                                    />
-                                                </Popconfirm>
-                                            </Flex>
+                                            <Popconfirm
+                                                title={`Удалить ответ на задание?`}
+                                                description="Это действие нельзя отменить"
+                                                onConfirm={(e) => {
+                                                    handleDeleSolution(solution.id)
+                                                }}
+                                                okText="Удалить"
+                                                cancelText="Отмена"
+                                            >
+                                                <Button
+                                                    type="text"
+                                                    danger
+                                                    icon={<DeleteOutlined/>}
+                                                />
+                                            </Popconfirm>
+                                        </Flex>
                                     }
                                     extra={
                                         solution.assessment !== null && (
@@ -183,17 +183,17 @@ const ViewTaskModal = () => {
                                 >
                                     <div style={{marginBottom: 16}}>
                                         <Text strong>Ответ:</Text>
-                                        <Paragraph
+                                        <div
                                             style={{
                                                 background: "#f9f9f9",
-                                                padding: 12,
+                                                padding: 16,
                                                 borderRadius: 8,
-                                                margin: "8px 0",
-                                                whiteSpace: "pre-wrap",
+                                                margin: "12px 0",
+                                                border: "1px solid #f0f0f0",
+                                                minHeight: 60,
                                             }}
-                                        >
-                                            {solution.answer_text}
-                                        </Paragraph>
+                                            dangerouslySetInnerHTML={{__html: solution.answer_text || "<em>Текст ответа отсутствует</em>"}}
+                                        />
                                     </div>
 
                                     {solution.files && solution.files.length > 0 ? (
