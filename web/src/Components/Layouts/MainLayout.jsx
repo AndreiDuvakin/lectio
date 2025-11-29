@@ -1,6 +1,6 @@
 import useMainLayout from "./useMainLayout.js";
 import {Layout, Menu} from "antd";
-import CoursesPage from "../Pages/Courses/CoursesPage.jsx";
+import CoursesPage from "../Pages/CoursesPage/CoursesPage.jsx";
 import LoadingIndicator from "../Widgets/LoadingIndicator/LoadingIndicator.jsx";
 import {Outlet} from "react-router-dom";
 import {BookOutlined, ControlOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
@@ -79,7 +79,7 @@ const MainLayout = () => {
                         <Outlet/>
                     )}
                 </Content>
-                <Footer style={{textAlign: "center"}}>{new Date().getFullYear()}</Footer>
+                <Footer style={{textAlign: "center"}}>lectio © {new Date().getFullYear()}</Footer>
             </Layout>
         </Layout>
     )

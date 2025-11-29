@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional, List
 from fastapi import HTTPException, status
 
@@ -52,7 +53,7 @@ class EnrollmentsService:
             enrollments_models.append(Enrollment(
                 course_id=course_id,
                 student_id=enrollment.student_id,
-                enrollment_date=enrollment.enrollment_date,
+                enrollment_date=datetime.datetime.now(),
             ))
 
         enrollments_models = await self.enrollments_repository.create_list(enrollments_models)

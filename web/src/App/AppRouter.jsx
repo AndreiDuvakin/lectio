@@ -7,6 +7,7 @@ import CoursesPage from "../Components/Pages/Courses/CoursesPage.jsx";
 import MainLayout from "../Components/Layouts/MainLayout.jsx";
 import ProfilePage from "../Components/Pages/ProfilePage/ProfilePage.jsx";
 import AdminPage from "../Components/Pages/AdminPage/AdminPage.jsx";
+import CourseDetailPage from "../Components/Pages/CourseDetailPage/CourseDetailPage.jsx";
 
 
 const AppRouter = () => (
@@ -18,6 +19,7 @@ const AppRouter = () => (
             <Route element={<MainLayout/>}>
                 <Route path={"/courses"} element={<CoursesPage/>}/>
                 <Route path={"/profile"} element={<ProfilePage/>}/>
+                <Route path="/courses/:courseId" element={<CourseDetailPage />} />
                 <Route path={"*"} element={<Navigate to={"/courses"}/>}/>
             </Route>
         </Route>

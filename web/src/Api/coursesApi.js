@@ -14,6 +14,20 @@ export const coursesApi = createApi({
             }),
             providesTags: ['course'],
         }),
+        getAllMyCourses: builder.query({
+            query: () => ({
+                url: "/courses/for-me/",
+                method: "GET",
+            }),
+            providesTags: ['course'],
+        }),
+        getCourseById: builder.query({
+            query: (courseId) => ({
+                url: `/courses/${courseId}/`,
+                method: "GET",
+            }),
+            providesTags: ['course'],
+        }),
         createCourse: builder.mutation({
             query: (data) => ({
                 url: "/courses/",
@@ -38,10 +52,10 @@ export const coursesApi = createApi({
             providesTags: ['teacher'],
         }),
         replaceCourseTeachers: builder.mutation({
-            query: ({courseId, ...data}) => ({
+            query: ({courseId, teachers}) => ({
                 url: `/courses/${courseId}/teachers/`,
                 method: "PUT",
-                body: data,
+                body: teachers,
             }),
             invalidatesTags: ['teacher'],
         }),
@@ -53,10 +67,10 @@ export const coursesApi = createApi({
             providesTags: ['student'],
         }),
         replaceCourseStudents: builder.mutation({
-            query: ({courseId, ...data}) => ({
+            query: ({courseId, students}) => ({
                 url: `/courses/${courseId}/students/`,
                 method: "PUT",
-                body: data,
+                body: students,
             }),
             invalidatesTags: ['student'],
         }),
@@ -65,6 +79,8 @@ export const coursesApi = createApi({
 
 export const {
     useGetAllCoursesQuery,
+    useGetAllMyCoursesQuery,
+    useGetCourseByIdQuery,
     useCreateCourseMutation,
     useUpdateCourseMutation,
     useGetCourseTeachersQuery,

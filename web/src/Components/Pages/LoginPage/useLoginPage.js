@@ -26,7 +26,7 @@ const LoginPage = () => {
             hasRedirected.current = true;
             navigate("/");
         }
-        document.title = "Аутентификация";
+        document.title = "Система обучения lectio - Аутентификация";
     }, [user, userData, isLoading, navigate]);
 
     const onFinish = async (loginData) => {

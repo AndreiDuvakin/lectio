@@ -4,13 +4,16 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.courses_repository import CoursesRepository
-from app.domain.entities.courses import CourseRead, CourseCreate
-from app.domain.models import Course
+from app.core.constants import UserRoles
+from app.domain.entities.courses import CourseRead, CourseCreate, CourseCreated
+from app.domain.models import Course, User
+from app.settings import Settings
 
 
 class CoursesService:
     def __init__(self, db: AsyncSession):
         self.courses_repository = CoursesRepository(db)
+        self.settings = Settings()
 
     async def get_all(self) -> List[CourseRead]:
         courses = await self.courses_repository.get_all()
@@ -22,7 +25,35 @@ class CoursesService:
 
         return response
 
-    async def create(self, course: CourseCreate) -> Optional[CourseRead]:
+    async def get_all_for_me(self, user: User) -> Optional[List[CourseRead]]:
+        if user.role.title == self.settings.root_role_name:
+            courses = await self.courses_repository.get_all()
+
+        elif user.role.title == UserRoles.TEACHER:
+            courses = await self.courses_repository.get_all_for_teacher(user.id)
+
+        elif user.role.title == UserRoles.STUDENT:
+            courses = await self.courses_repository.get_all_for_enrollment(user.id)
+
+        else:
+            courses = []
+
+        response = []
+        for course in courses:
+            response.append(
+                CourseRead.model_validate(course)
+            )
+
+        return response
+
+    async def get_by_id(self, course_id: int) -> Optional[CourseRead]:
+        course = await self.courses_repository.get_by_id(course_id)
+        if course is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Курс с таким Id не найден')
+
+        return CourseRead.model_validate(course)
+
+    async def create(self, course: CourseCreate) -> CourseCreated:  # ← возвращаем CourseCreated
         course_model = Course(
             title=course.title,
             description=course.description,
@@ -30,7 +61,7 @@ class CoursesService:
 
         course_model = await self.courses_repository.create(course_model)
 
-        return CourseRead.model_validate(course_model)
+        return CourseCreated.model_validate(course_model)
 
     async def update(self, course_id: int, course: CourseCreate) -> Optional[CourseRead]:
         course_model = await self.courses_repository.get_by_id(course_id)

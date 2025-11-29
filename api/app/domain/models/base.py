@@ -17,8 +17,8 @@ class RootTable(Base):
 class PhotoAbstract(RootTable):
     __abstract__ = True
 
-    photo_filename: Mapped[str] = mapped_column()
-    photo_path: Mapped[str] = mapped_column()
+    photo_filename: Mapped[str] = mapped_column(nullable=True)
+    photo_path: Mapped[str] = mapped_column(nullable=True)
 
 
 class FileAbstract(RootTable):

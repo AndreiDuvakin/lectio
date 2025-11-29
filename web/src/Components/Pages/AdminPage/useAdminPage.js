@@ -1,6 +1,6 @@
 import {useGetAllUsersQuery, useGetAuthenticatedUserDataQuery} from "../../../Api/usersApi.js";
 import {useGetAllRolesQuery} from "../../../Api/rolesApi.js";
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useDispatch} from "react-redux";
 import {setOpenModalCreateUser, setSelectedUserToUpdate} from "../../../Redux/Slices/usersSlice.js";
 
@@ -17,6 +17,10 @@ const useAdminPage = () => {
         searchString,
         setSearchString,
     ] = useState("");
+
+    useEffect(() => {
+        window.document.title = "Система обучения lectio - Панель администратора";
+    }, []);
 
     const {
         data: usersData = [],

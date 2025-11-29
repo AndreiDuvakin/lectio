@@ -2,7 +2,6 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class CourseTeacherCreate(BaseModel):
-    course_id: int = Field()
     teacher_id: int = Field()
 
 

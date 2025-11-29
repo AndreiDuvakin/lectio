@@ -18,6 +18,7 @@ class Lesson(RootTable):
     creator_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
 
     course: Mapped['Course'] = relationship('Course', back_populates='lessons')
-    creator: Mapped['User'] = relationship('User', back_populates='created_lessons')
+    creator: Mapped['User'] = relationship('User', back_populates='created_lessons', lazy='joined')
 
     files: Mapped[List['LessonFile']] = relationship('LessonFile', back_populates='lesson')
+    user_check_lessons: Mapped[List['UserCheckLessons']] = relationship('UserCheckLessons', back_populates='lesson')
