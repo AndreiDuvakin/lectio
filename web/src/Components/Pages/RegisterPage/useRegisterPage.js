@@ -1,8 +1,17 @@
-import { message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import {message, notification} from 'antd';
+import {useNavigate} from 'react-router-dom';
+import {useRegisterUserMutation} from "../../../Api/usersApi.js";
 
 const useRegisterPage = () => {
     const navigate = useNavigate();
+
+    const [
+        createUser,
+        {
+            isLoading,
+            isError,
+        }
+    ] = useRegisterUserMutation();
 
     const pageContainerStyle = {
         width: 450,
@@ -12,10 +21,30 @@ const useRegisterPage = () => {
         backgroundColor: "white",
     };
 
-    const onFinish = (values) => {
-        console.log('Регистрация:', values);
-        message.success('Регистрация выполнена успешно!');
-        navigate('/login');
+    const onFinish = async (values) => {
+        const payload = {
+            ...values,
+            birthdate: values.birthdate
+                ? values.birthdate.format("YYYY-MM-DD")
+                : null,
+        };
+        console.log(payload)
+        try {
+            await createUser(payload);
+
+            notification.success({
+                title: "Успешно",
+                message: "Пользователь успешно создан",
+                placement: "topRight",
+            })
+            navigate('/login');
+        } catch {
+            notification.error({
+                title: "Ошибка",
+                message: "Пользователь не создан",
+                placement: "topRight",
+            })
+        }
     };
 
     return {

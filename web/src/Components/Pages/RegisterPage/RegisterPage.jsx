@@ -1,6 +1,7 @@
-import {Button, Col, Flex, Form, Input, Select, Typography} from "antd";
-import {UserOutlined, MailOutlined, LockOutlined} from "@ant-design/icons";
+import {Button, Col, DatePicker, Flex, Form, Input, Select, Tooltip, Typography} from "antd";
+import {UserOutlined, MailOutlined, LockOutlined, InfoCircleOutlined, CalendarOutlined} from "@ant-design/icons";
 import useRegisterPage from "./useRegisterPage.js";
+import dayjs from "dayjs";
 
 const {Title, Text} = Typography;
 
@@ -24,22 +25,8 @@ const RegisterPage = () => {
                     layout="vertical"
                 >
                     <Form.Item
-                        label="Роль"
-                        name="role"
-                        rules={[{required: true, message: "Выберите роль"}]}
-                    >
-                        <Select 
-                            placeholder="Выберите роль"
-                            size="large"
-                        >
-                            <Select.Option value="student">Студент</Select.Option>
-                            <Select.Option value="teacher">Преподаватель</Select.Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item
                         label="Имя"
-                        name="firstName"
+                        name="first_name"
                         rules={[{required: true, message: "Введите имя"}]}
                     >
                         <Input
@@ -51,7 +38,7 @@ const RegisterPage = () => {
 
                     <Form.Item
                         label="Фамилия"
-                        name="lastName"
+                        name="last_name"
                         rules={[{required: true, message: "Введите фамилию"}]}
                     >
                         <Input
@@ -75,6 +62,19 @@ const RegisterPage = () => {
                             size="large"
                         />
                     </Form.Item>
+                    <Form.Item
+                        name="birthdate"
+                        label="Дата рождения"
+                        rules={[{required: true, message: "Введите дату рождения"}]}
+                    >
+                        <DatePicker
+                            suffixIcon={<CalendarOutlined/>}
+                            format="DD.MM.YYYY"
+                            style={{width: "100%"}}
+                            size="large"
+                            maxDate={dayjs()}
+                        />
+                    </Form.Item>
 
                     <Form.Item
                         label="Логин"
@@ -87,6 +87,13 @@ const RegisterPage = () => {
                             size="large"
                         />
                     </Form.Item>
+                    <Tooltip
+                        title="Пароль должен содержать не менее 8 символов, включая хотя бы одну букву и одну цифру и один специальный символ"
+                    >
+                        <Typography.Title level={3} style={{width: 30}}>
+                            <InfoCircleOutlined/>
+                        </Typography.Title>
+                    </Tooltip>
 
                     <Form.Item
                         label="Пароль"
@@ -105,7 +112,7 @@ const RegisterPage = () => {
 
                     <Form.Item
                         label="Подтверждение пароля"
-                        name="confirmPassword"
+                        name="repeat_password"
                         dependencies={['password']}
                         rules={[
                             {required: true, message: "Подтвердите пароль"},
