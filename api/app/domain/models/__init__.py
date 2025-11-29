@@ -21,4 +21,5 @@ from app.domain.models.solutions import Solution
 from app.domain.models.statuses import Status
 from app.domain.models.task_files import TaskFile
 from app.domain.models.tasks import Task
+from app.domain.models.user_check_lessons import UserCheckLessons
 from app.domain.models.users import User

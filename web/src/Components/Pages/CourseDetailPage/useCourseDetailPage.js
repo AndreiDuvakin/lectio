@@ -1,4 +1,8 @@
-import {useGetAuthenticatedUserDataQuery} from "../../../Api/usersApi.js";
+import {
+    useGetAuthenticatedUserDataQuery,
+    useGetReadedLessonsByCourseQuery,
+    useSetLessonAsReadedMutation
+} from "../../../Api/usersApi.js";
 import {useGetCourseByIdQuery} from "../../../Api/coursesApi.js";
 import {useEffect} from "react";
 import {useDispatch} from "react-redux";
@@ -107,7 +111,24 @@ const useCourseDetailPage = (courseId) => {
 
     const isTeacherOrAdmin = [CONFIG.ROOT_ROLE_NAME, ROLES.TEACHER].includes(userData?.role?.title);
 
-    const handleOpenLesson = (lesson) => {
+    const [
+        markLessonAsRead
+    ] = useSetLessonAsReadedMutation();
+
+    const markLesson = async (lessonId) => {
+        try {
+            await markLessonAsRead(lessonId);
+        } catch {
+            notification.error({
+                title: "Ошибка",
+                description: "Не удалось отметить лекцию как прочитанную",
+                placement: "topRight",
+            })
+        }
+    };
+
+    const handleOpenLesson = async (lesson) => {
+        await markLesson(lesson.id)
         dispatch(setSelectedLessonToView(lesson))
     };
 
@@ -127,6 +148,15 @@ const useCourseDetailPage = (courseId) => {
         dispatch(setSelectedTaskToUpdate(task))
     };
 
+    const {
+        data: readedLessons = []
+    } = useGetReadedLessonsByCourseQuery(courseData?.id, {
+        pollingInterval: 10000,
+        skip: courseData?.id === null || courseData?.id === undefined
+    });
+
+    const listReadLessonsIds = readedLessons.map((data) => data.lesson_id);
+
     return {
         tasksData,
         isTeacherOrAdmin,
@@ -143,6 +173,7 @@ const useCourseDetailPage = (courseId) => {
         handleOpenTask,
         handleEditTask,
         handleDeleteTask,
+        listReadLessonsIds,
     }
 };
 

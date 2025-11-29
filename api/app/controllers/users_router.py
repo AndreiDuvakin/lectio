@@ -1,13 +1,14 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import get_db
-from app.domain.entities.users import UserRead, UserUpdate, PasswordChangeRequest, UserCreate
+from app.domain.entities.users import UserRead, UserUpdate, PasswordChangeRequest, UserCreate, UserCheckLessonRead
 from app.domain.models import User
 from app.infrastructure.dependencies import require_auth_user, require_admin
 from app.infrastructure.register_service import RegisterService
+from app.infrastructure.user_check_lessons_service import UserCheckLessonsService
 from app.infrastructure.users_service import UsersService
 
 users_router = APIRouter()
@@ -101,3 +102,47 @@ async def get_users_by_role_name(
 ):
     users_service = UsersService(db)
     return await users_service.get_by_role_name(role_name)
+
+
+@users_router.get(
+    '/check-my-lessons/{course_id}/',
+    response_model=Optional[List[UserCheckLessonRead]],
+    summary='Return all users with given lessons',
+    description='Return all users with given lessons',
+)
+async def get_all_users_in_lessons(
+        course_id: int,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_auth_user)
+):
+    user_check_lessons_service = UserCheckLessonsService(db)
+    return await user_check_lessons_service.get_by_course_id_and_user_id(course_id, user.id)
+
+
+@users_router.post(
+    '/check-lesson/{lesson_id}/',
+    status_code=status.HTTP_201_CREATED,
+    summary='Mark lesson as checked',
+    description='Mark lesson as checked',
+)
+async def mark_lesson_checked(
+        lesson_id: int,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_auth_user)
+):
+    user_check_lessons_service = UserCheckLessonsService(db)
+    await user_check_lessons_service.create(lesson_id, user.id)
+
+
+@users_router.get(
+    '/my-progress/{course_id}/',
+    summary='Return user progress',
+    description='Return user progress',
+)
+async def get_user_progress(
+        course_id: int,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_auth_user),
+):
+    user_check_lessons_service = UserCheckLessonsService(db)
+    return await user_check_lessons_service.calculate_user_progress(course_id, user.id)

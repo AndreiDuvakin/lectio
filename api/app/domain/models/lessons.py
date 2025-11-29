@@ -21,3 +21,4 @@ class Lesson(RootTable):
     creator: Mapped['User'] = relationship('User', back_populates='created_lessons', lazy='joined')
 
     files: Mapped[List['LessonFile']] = relationship('LessonFile', back_populates='lesson')
+    user_check_lessons: Mapped[List['UserCheckLessons']] = relationship('UserCheckLessons', back_populates='lesson')

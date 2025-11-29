@@ -1,10 +1,10 @@
 from typing import Optional, List
 
-from sqlalchemy import select
+from sqlalchemy import select, func, distinct
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.domain.models import Solution
+from app.domain.models import Solution, Task
 
 
 class SolutionsRepository:
@@ -18,6 +18,22 @@ class SolutionsRepository:
         )
         result = await self.db.execute(query)
         return result.scalars().first()
+
+    async def get_completed_tasks_by_course_and_user(
+            self,
+            course_id: int,
+            user_id: int
+    ) -> List[int]:
+        query = (
+            select(distinct(Solution.task_id))
+            .join(Task, Solution.task_id == Task.id)
+            .where(
+                Solution.student_id == user_id,
+                Task.course_id == course_id
+            )
+        )
+        result = await self.db.execute(query)
+        return result.scalars().all()
 
     async def get_by_task_id(self, task_id: int) -> Optional[List[Solution]]:
         query = (

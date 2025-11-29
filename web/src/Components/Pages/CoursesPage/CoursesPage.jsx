@@ -8,7 +8,7 @@ import {
     Spin,
     Tag,
     Typography,
-    Avatar, Result, FloatButton, Tooltip,
+    Avatar, Result, FloatButton, Tooltip, Progress, Divider,
 } from "antd";
 import {
     PlusOutlined,
@@ -20,6 +20,8 @@ import LoadingIndicator from "../../Widgets/LoadingIndicator/LoadingIndicator.js
 import CreateCourseModalForm from "./Components/CreateCourseModalForm/CreateCourseModalForm.jsx";
 import UpdateCourseModalForm from "./Components/UpdateCourseModalForm/UpdateCourseModalForm.jsx";
 import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import CONFIG from "../../../Core/сonfig.js";
 
 const {Title, Text} = Typography;
 
@@ -34,6 +36,38 @@ const CoursesPage = () => {
         openCreateModal,
         openEditModal,
     } = useCoursesPage();
+
+
+    const [courseProgress, setCourseProgress] = useState({});
+
+    useEffect(() => {
+        if (courses.length === 0) return;
+
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
+
+        const fetchProgress = async () => {
+            const progress = {};
+            for (const course of courses) {
+                try {
+                    const res = await fetch(`${CONFIG.BASE_URL}/users/my-progress/${course.id}/`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        progress[course.id] = data; // data — это число, например 87.5
+                    }
+                } catch (err) {
+                    console.error("Progress fetch error for course", course.id);
+                }
+            }
+            setCourseProgress(progress);
+        };
+
+        fetchProgress();
+    }, [courses]);
 
     if (isLoading) {
         return (
@@ -119,6 +153,11 @@ const CoursesPage = () => {
                                                 </Avatar>
                                             ))}
                                         </Avatar.Group>
+                                        <Divider/>
+                                        <Text type="secondary">Прогресс:</Text>
+                                        {courseProgress[course.id] !== undefined && (
+                                            <Progress percent={courseProgress[course.id]} size={[300, 20]}/>
+                                        )}
                                     </div>
                                 )}
                             </Card>

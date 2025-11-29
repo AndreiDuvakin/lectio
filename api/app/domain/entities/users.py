@@ -62,3 +62,19 @@ class UserRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserCheckLessonBase(BaseModel):
+    lesson_id: int
+    user_id: int
+
+
+class UserCheckLessonCreate(UserCheckLessonBase):
+    pass
+
+
+class UserCheckLessonRead(UserCheckLessonBase):
+    id: int
+
+    class Config:
+        from_attributes = True

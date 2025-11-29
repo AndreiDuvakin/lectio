@@ -51,6 +51,11 @@ class User(PhotoAbstract):
         'SolutionComment',
         back_populates='comment_autor',
     )
+    from app.domain.models.user_check_lessons import UserCheckLessons
+    user_check_lessons: Mapped[List['UserCheckLessons']] = relationship(
+        'UserCheckLessons',
+        back_populates='user',
+    )
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

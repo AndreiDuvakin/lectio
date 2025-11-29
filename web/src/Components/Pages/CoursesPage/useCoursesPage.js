@@ -1,4 +1,4 @@
-import {useGetAuthenticatedUserDataQuery} from "../../../Api/usersApi.js";
+import {useGetAuthenticatedUserDataQuery, useGetMyCourseProgressQuery} from "../../../Api/usersApi.js";
 import {useGetAllCoursesQuery, useGetAllMyCoursesQuery} from "../../../Api/coursesApi.js";
 import CONFIG from "../../../Core/сonfig.js";
 import {ROLES} from "../../../Core/constants.js";

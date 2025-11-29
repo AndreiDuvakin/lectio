@@ -16,7 +16,7 @@ import {
 } from "antd";
 import {
     ArrowLeftOutlined,
-    BookOutlined,
+    BookOutlined, CheckCircleFilled, ClockCircleOutlined,
     DeleteOutlined,
     EditOutlined,
     FormOutlined,
@@ -55,6 +55,7 @@ const CourseDetailPage = () => {
         handleOpenTask,
         handleEditTask,
         handleDeleteTask,
+        listReadLessonsIds,
     } = useCourseDetailPage(courseId);
 
     if (isLoading) {
@@ -177,10 +178,29 @@ const CourseDetailPage = () => {
                                                 )}
                                             </Space>
                                         </div>
+                                        <div style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center"
+                                        }}>
+                                            <Text>
+                                                {isLesson ? "Лекционный материал" : "Задание"}
+                                            </Text>
 
-                                        <Text>
-                                            {isLesson ? "Лекционный материал" : "Задание"}
-                                        </Text>
+                                            {isLesson && (
+                                                listReadLessonsIds.includes(item.id) ? (
+                                                    <Space style={{color: "#52c41a", fontWeight: 500}}>
+                                                        <CheckCircleFilled style={{fontSize: 18}}/>
+                                                        <span>Пройдено</span>
+                                                    </Space>
+                                                ) : (
+                                                    <Space style={{color: "#999"}}>
+                                                        <ClockCircleOutlined style={{fontSize: 16}}/>
+                                                        <span>Не прочитано</span>
+                                                    </Space>
+                                                )
+                                            )}
+                                        </div>
 
                                         <div
                                             style={{

@@ -46,6 +46,27 @@ export const usersApi = createApi({
             }),
             providesTags: ["user"],
         }),
+        getReadedLessonsByCourse: builder.query({
+            query: (courseId) => ({
+                url: `/users/check-my-lessons/${courseId}/`,
+                method: "GET",
+            }),
+            providesTags: ["user"],
+        }),
+        setLessonAsReaded: builder.mutation({
+            query: (lessonId) => ({
+                url: `/users/check-lesson/${lessonId}/`,
+                method: "POST",
+            }),
+            invalidatesTags: ["user"],
+        }),
+        getMyCourseProgress: builder.query({
+            query: (courseId) => ({
+                url: `/users/my-progress/${courseId}/`,
+                method: "GET",
+            }),
+            providesTags: ["user"],
+        }),
     }),
 });
 
@@ -56,4 +77,7 @@ export const {
     useUpdateUserPasswordMutation,
     useCreateUserMutation,
     useGetUsersByRoleNameQuery,
+    useGetReadedLessonsByCourseQuery,
+    useSetLessonAsReadedMutation,
+    useGetMyCourseProgressQuery,
 } = usersApi;
