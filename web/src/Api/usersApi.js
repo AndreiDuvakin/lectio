@@ -39,6 +39,14 @@ export const usersApi = createApi({
             }),
             invalidatesTags: ["user"],
         }),
+        registerUser: builder.mutation({
+            query: (data) => ({
+                url: "/users/register/",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["user"],
+        }),
         getUsersByRoleName: builder.query({
             query: (roleName) => ({
                 url: `/users/role/${roleName}/`,
@@ -76,6 +84,7 @@ export const {
     useUpdateUserMutation,
     useUpdateUserPasswordMutation,
     useCreateUserMutation,
+    useRegisterUserMutation,
     useGetUsersByRoleNameQuery,
     useGetReadedLessonsByCourseQuery,
     useSetLessonAsReadedMutation,

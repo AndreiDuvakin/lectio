@@ -89,6 +89,20 @@ async def create_user(
     return await register_service.create_user(user)
 
 
+@users_router.post(
+    '/register/',
+    response_model=Optional[UserRead],
+    summary='Register a new user',
+    description='Register a new user',
+)
+async def register_user(
+        user: UserCreate,
+        db: AsyncSession = Depends(get_db),
+):
+    register_service = RegisterService(db)
+    return await register_service.user_register(user)
+
+
 @users_router.get(
     '/role/{role_name}/',
     response_model=List[UserRead],
