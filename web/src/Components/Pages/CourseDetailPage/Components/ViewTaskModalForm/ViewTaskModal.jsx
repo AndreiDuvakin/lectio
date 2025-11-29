@@ -4,7 +4,7 @@ import {
     Col, Collapse,
     Divider,
     Empty, Flex,
-    Form, Input, InputNumber,
+    Form, Input, InputNumber, List,
     Modal,
     Popconfirm,
     Row,
@@ -51,6 +51,8 @@ const ViewTaskModal = () => {
         allSolutions,
         onAssessmentFinish,
         assessmentForm,
+        onCommentSubmit,
+        commentForm
     } = useViewTaskModal();
 
     return (
@@ -228,6 +230,91 @@ const ViewTaskModal = () => {
                                     ) : (
                                         <Text type="secondary">Файлы не прикреплены</Text>
                                     )}
+                                    <div style={{ marginTop: 32 }}>
+                                        <Title level={4}>Комментарии к решению</Title>
+
+                                        <div
+                                            style={{
+                                                maxHeight: 400,
+                                                overflowY: "auto",
+                                                padding: "8px 0",
+                                                border: "1px solid #f0f0f0",
+                                                borderRadius: 8,
+                                                background: "#fafafa",
+                                            }}
+                                        >
+                                            {solution.solution_comments && solution.solution_comments.length > 0 ? (
+                                                <List
+                                                    dataSource={solution.solution_comments}
+                                                    renderItem={(comment) => (
+                                                        <List.Item style={{ padding: "12px 16px", borderBottom: "1px solid #f0f0f0" }}>
+                                                            <List.Item.Meta
+                                                                avatar={
+                                                                    <Avatar style={{ backgroundColor: "#1890ff" }}>
+                                                                        {comment.comment_autor.first_name[0]}
+                                                                        {comment.comment_autor.last_name[0]}
+                                                                    </Avatar>
+                                                                }
+                                                                title={
+                                                                    <Space>
+                                                                        <Text strong>
+                                                                            {comment.comment_autor.first_name} {comment.comment_autor.last_name}
+                                                                        </Text>
+                                                                        {comment.comment_autor.role?.title === "teacher" && (
+                                                                            <Tag color="gold" size="small">Преподаватель</Tag>
+                                                                        )}
+                                                                    </Space>
+                                                                }
+                                                                description={
+                                                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                                                        {new Date(comment.created_at || Date.now()).toLocaleString("ru-RU")}
+                                                                    </Text>
+                                                                }
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    marginTop: 8,
+                                                                    paddingLeft: 56,
+                                                                    whiteSpace: "pre-wrap",
+                                                                    wordBreak: "break-word",
+                                                                }}
+                                                                dangerouslySetInnerHTML={{ __html: comment.comment_text}}
+                                                            />
+                                                        </List.Item>
+                                                    )}
+                                                />
+                                            ) : (
+                                                <Empty
+                                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                                    description="Пока нет комментариев"
+                                                    style={{ margin: "20px 0" }}
+                                                />
+                                            )}
+                                        </div>
+
+                                        <Form
+                                            onFinish={(values) => onCommentSubmit(solution.id, values.comment)}
+                                            style={{ marginTop: 16 }}
+                                            form={commentForm}
+                                        >
+                                            <Form.Item
+                                                name="comment"
+                                                rules={[{ required: true, message: "Напишите комментарий" }]}
+                                            >
+                                                <Input.TextArea
+                                                    rows={3}
+                                                    placeholder="Напишите комментарий к решению..."
+                                                    allowClear
+                                                />
+                                            </Form.Item>
+
+                                            <Form.Item style={{ marginBottom: 0 }}>
+                                                <Button type="primary" htmlType="submit">
+                                                    Отправить комментарий
+                                                </Button>
+                                            </Form.Item>
+                                        </Form>
+                                    </div>
                                 </Panel>
                             ))}
                         </Collapse>
@@ -336,7 +423,7 @@ const ViewTaskModal = () => {
                                         <Text type="secondary">Файлы не прикреплены</Text>
                                     )}
                                     <Title level={3}>Оценка</Title>
-                                    <Form form={assessmentForm} name={"assessmentForm"} onFinish={() => {
+                                    <Form form={assessmentForm} onFinish={() => {
                                         onAssessmentFinish(solution.id)
                                     }}>
                                         <Form.Item
@@ -360,6 +447,91 @@ const ViewTaskModal = () => {
                                             </Button>
                                         </Form.Item>
                                     </Form>
+                                    <div style={{ marginTop: 32 }}>
+                                        <Title level={4}>Комментарии к решению</Title>
+
+                                        <div
+                                            style={{
+                                                maxHeight: 400,
+                                                overflowY: "auto",
+                                                padding: "8px 0",
+                                                border: "1px solid #f0f0f0",
+                                                borderRadius: 8,
+                                                background: "#fafafa",
+                                            }}
+                                        >
+                                            {solution.solution_comments && solution.solution_comments.length > 0 ? (
+                                                <List
+                                                    dataSource={solution.solution_comments}
+                                                    renderItem={(comment) => (
+                                                        <List.Item style={{ padding: "12px 16px", borderBottom: "1px solid #f0f0f0" }}>
+                                                            <List.Item.Meta
+                                                                avatar={
+                                                                    <Avatar style={{ backgroundColor: "#1890ff" }}>
+                                                                        {comment.comment_autor.first_name[0]}
+                                                                        {comment.comment_autor.last_name[0]}
+                                                                    </Avatar>
+                                                                }
+                                                                title={
+                                                                    <Space>
+                                                                        <Text strong>
+                                                                            {comment.comment_autor.first_name} {comment.comment_autor.last_name}
+                                                                        </Text>
+                                                                        {comment.comment_autor.role?.title === "teacher" && (
+                                                                            <Tag color="gold" size="small">Преподаватель</Tag>
+                                                                        )}
+                                                                    </Space>
+                                                                }
+                                                                description={
+                                                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                                                        {new Date(comment.created_at || Date.now()).toLocaleString("ru-RU")}
+                                                                    </Text>
+                                                                }
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    marginTop: 8,
+                                                                    paddingLeft: 56,
+                                                                    whiteSpace: "pre-wrap",
+                                                                    wordBreak: "break-word",
+                                                                }}
+                                                                dangerouslySetInnerHTML={{ __html: comment.comment_text}}
+                                                            />
+                                                        </List.Item>
+                                                    )}
+                                                />
+                                            ) : (
+                                                <Empty
+                                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                                    description="Пока нет комментариев"
+                                                    style={{ margin: "20px 0" }}
+                                                />
+                                            )}
+                                        </div>
+
+                                        <Form
+                                            onFinish={(values) => onCommentSubmit(solution.id, values.comment)}
+                                            style={{ marginTop: 16 }}
+                                            form={commentForm}
+                                        >
+                                            <Form.Item
+                                                name="comment"
+                                                rules={[{ required: true, message: "Напишите комментарий" }]}
+                                            >
+                                                <Input.TextArea
+                                                    rows={3}
+                                                    placeholder="Напишите комментарий к решению..."
+                                                    allowClear
+                                                />
+                                            </Form.Item>
+
+                                            <Form.Item style={{ marginBottom: 0 }}>
+                                                <Button type="primary" htmlType="submit">
+                                                    Отправить комментарий
+                                                </Button>
+                                            </Form.Item>
+                                        </Form>
+                                    </div>
                                 </Panel>
                             ))}
                         </Collapse>

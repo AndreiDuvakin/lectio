@@ -25,6 +25,7 @@ class SolutionsRepository:
             .filter_by(task_id=task_id)
             .options(
                 selectinload(Solution.files),
+                selectinload(Solution.solution_comments),
             )
         )
         result = await self.db.execute(query)
@@ -36,6 +37,7 @@ class SolutionsRepository:
             .filter_by(task_id=task_id, student_id=student_id)
             .options(
                 selectinload(Solution.files),
+                selectinload(Solution.solution_comments),
             )
         )
         result = await self.db.execute(query)

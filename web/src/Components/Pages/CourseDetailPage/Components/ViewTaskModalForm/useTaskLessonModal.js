@@ -12,6 +12,7 @@ import {
     useUploadFileMutation
 } from "../../../../../Api/solutionsApi.js";
 import {ROLES} from "../../../../../Core/constants.js";
+import {useCreateCommentMutation} from "../../../../../Api/commentsApi.js";
 
 
 const useViewTaskModal = () => {
@@ -36,6 +37,34 @@ const useViewTaskModal = () => {
     const [draftFiles, setDraftFiles] = useState([]);
     const [uploadFile] = useUploadFileMutation();
     const [deleteSolution] = useDeleteSolutionMutation();
+
+    const [createComment, {
+        isLoading: isCreatingComment,
+        isError: isErrorCreatingComment
+    }] = useCreateCommentMutation();
+
+    const onCommentSubmit = async (solutionId, commentText) => {
+        if (!commentText?.trim()) return;
+
+        try {
+            await createComment({
+                solutionId: solutionId,
+                comment: {
+                    comment_text: commentText.trim()
+                }
+            }).unwrap();
+            commentForm.resetFields();
+            notification.success({
+                message: "Комментарий отправлен",
+                description: "Ваш комментарий успешно добавлен",
+            });
+        } catch (error) {
+            notification.error({
+                message: "Ошибка",
+                description: error?.data?.detail || "Не удалось отправить комментарий",
+            });
+        }
+    };
 
     const handleAddFile = (file) => {
         const maxSize = 50 * 1024 * 1024; // 50 мегабайт
@@ -165,6 +194,7 @@ const useViewTaskModal = () => {
         pollingInterval: 5000,
     })
 
+    const [commentForm] = Form.useForm();
     const [downloadingFiles, setDownloadingFiles] = useState({});
 
     const downloadFile = async (fileId, fileName) => {
@@ -356,6 +386,7 @@ const useViewTaskModal = () => {
         allSolutions,
         onAssessmentFinish,
         assessmentForm,
+        onCommentSubmit,
     }
 };
 

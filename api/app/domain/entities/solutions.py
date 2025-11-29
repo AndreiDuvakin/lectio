@@ -27,14 +27,33 @@ class SolutionAfterCreate(SolutionBase):
         from_attributes = True
 
 
-class SolutionRead(SolutionAfterCreate):
-    created_at: datetime
+class AssessmentCreate(BaseModel):
+    assessment: int = Field(...)
 
-    files: Optional[List[ReadSolutionFile]] = []
+
+class SolutionCommentBase(BaseModel):
+    comment_text: str = Field(...)
+
+
+class SolutionCommentCreate(SolutionCommentBase):
+    pass
+
+
+class SolutionCommentRead(SolutionCommentBase):
+    comment_autor_id: int
+    solution_id: int
+
+    comment_autor: UserRead
 
     class Config:
         from_attributes = True
 
 
-class AssessmentCreate(BaseModel):
-    assessment: int = Field(...)
+class SolutionRead(SolutionAfterCreate):
+    created_at: datetime
+
+    files: Optional[List[ReadSolutionFile]] = []
+    solution_comments: Optional[List[SolutionCommentRead]] = []
+
+    class Config:
+        from_attributes = True

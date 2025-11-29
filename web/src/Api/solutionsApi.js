@@ -5,21 +5,21 @@ import {baseQueryWithAuth} from "./baseQuery.js";
 export const solutionsApi = createApi({
     reducerPath: "solutionsApi",
     baseQuery: baseQueryWithAuth,
-    tagTypes: ["lesson"],
+    tagTypes: ["solution"],
     endpoints: (builder) => ({
         getTaskSolutions: builder.query({
             query: (taskId) => ({
                 url: `/solutions/task/${taskId}/`,
                 method: "GET"
             }),
-            providesTags: ["lesson"],
+            providesTags: ["solution"],
         }),
         getTaskStudentSolutions: builder.query({
             query: ({taskId, studentId}) => ({
                 url: `/solutions/task/${taskId}/student/${studentId}/`,
                 method: "GET"
             }),
-            providesTags: ["lesson"],
+            providesTags: ["solution"],
         }),
         createSolution: builder.mutation({
             query: ({taskId, solution}) => ({
@@ -27,21 +27,21 @@ export const solutionsApi = createApi({
                 method: "POST",
                 body: solution,
             }),
-            invalidatesTags: ["lesson"],
+            invalidatesTags: ["solution"],
         }),
         deleteSolution: builder.mutation({
             query: (solutionId) => ({
                 url: `/solutions/${solutionId}/`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["lesson"],
+            invalidatesTags: ["solution"],
         }),
         getSolutionFilesList: builder.query({
             query: (solutionId) => ({
                 url: `/solutions/files/${solutionId}/`,
                 method: "GET"
             }),
-            providesTags: ["lesson"],
+            providesTags: ["solution"],
         }),
         uploadFile: builder.mutation({
             query: ({solutionId, fileData}) => {
@@ -57,7 +57,7 @@ export const solutionsApi = createApi({
                     body: formData,
                 };
             },
-            invalidatesTags: ["task"],
+            invalidatesTags: ["solution"],
         }),
         createAssessment: builder.mutation({
             query: ({solutionId, assessment}) => ({
@@ -65,7 +65,7 @@ export const solutionsApi = createApi({
                 method: "POST",
                 body: assessment,
             }),
-            invalidatesTags: ["lesson"],
+            invalidatesTags: ["solution"],
         }),
     }),
 });

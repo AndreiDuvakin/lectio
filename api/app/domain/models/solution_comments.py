@@ -1,8 +1,5 @@
-from typing import List
-
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 
 from app.domain.models.base import RootTable
 
@@ -15,5 +12,5 @@ class SolutionComment(RootTable):
     comment_autor_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
     solution_id: Mapped[int] = mapped_column(ForeignKey('solutions.id'), nullable=False)
 
-    comment_autor: Mapped['User'] = relationship('User', back_populates='solution_comments')
+    comment_autor: Mapped['User'] = relationship('User', back_populates='solution_comments', lazy='joined')
     solution: Mapped['Solution'] = relationship('Solution', back_populates='solution_comments')

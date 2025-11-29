@@ -6,6 +6,7 @@ from app.controllers.courses_router import courses_router
 from app.controllers.lessons_router import lessons_router
 from app.controllers.register_router import register_router
 from app.controllers.roles_router import roles_router
+from app.controllers.solution_comments_router import solution_comments_router
 from app.controllers.solutions_router import solution_router
 from app.controllers.statuses_router import statuses_router
 from app.controllers.tasks_router import tasks_router
@@ -30,6 +31,7 @@ def start_app():
     api_app.include_router(lessons_router, prefix=f'{settings.prefix}/lessons', tags=['lessons'])
     api_app.include_router(register_router, prefix=f'{settings.prefix}/register', tags=['register'])
     api_app.include_router(roles_router, prefix=f'{settings.prefix}/roles', tags=['roles'])
+    api_app.include_router(solution_comments_router, prefix=f'{settings.prefix}/comments', tags=['comments'])
     api_app.include_router(solution_router, prefix=f'{settings.prefix}/solutions', tags=['solutions'])
     api_app.include_router(statuses_router, prefix=f'{settings.prefix}/statuses', tags=['statuses'])
     api_app.include_router(tasks_router, prefix=f'{settings.prefix}/tasks', tags=['tasks'])
