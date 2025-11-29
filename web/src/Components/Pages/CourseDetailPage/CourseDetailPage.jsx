@@ -30,6 +30,7 @@ import CreateLessonModalForm from "./Components/CreateLessonModalForm/CreateLess
 import ViewLessonModal from "./Components/ViewLessonModalForm/ViewLessonModal.jsx";
 import UpdateLessonModalForm from "./Components/UpdateLessonModalForm/UpdateLessonModalForm.jsx";
 import CreateTaskModalForm from "./Components/CreateTaskModalForm/CreateTaskModalForm.jsx";
+import UpdateTaskModalForm from "./Components/UpdateTaskModalForm/UpdateTaskModalForm.jsx";
 
 
 const {Title, Text} = Typography;
@@ -217,6 +218,7 @@ const CourseDetailPage = () => {
             <CreateTaskModalForm
                 courseId={courseId}
             />
+            <UpdateTaskModalForm/>
             {[CONFIG.ROOT_ROLE_NAME, ROLES.TEACHER].includes(userData.role.title) && (
                 <FloatButton.Group
                     placement={"left"}
