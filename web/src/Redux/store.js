@@ -11,6 +11,7 @@ import {statusesApi} from "../Api/statusesApi.js";
 import {coursesApi} from "../Api/coursesApi.js";
 import {lessonsApi} from "../Api/lessonsApi.js";
 import {tasksApi} from "../Api/tasksApi.js";
+import {solutionsApi} from "../Api/solutionsApi.js";
 
 export const store = configureStore({
     reducer: {
@@ -32,6 +33,8 @@ export const store = configureStore({
 
         tasks: tasksReducer,
         [tasksApi.reducerPath]: tasksApi.reducer,
+
+        [solutionsApi.reducerPath]: solutionsApi.reducer,
     },
     middleware: (getDefaultMiddleware) => (
         getDefaultMiddleware().concat(
@@ -42,6 +45,7 @@ export const store = configureStore({
             coursesApi.middleware,
             lessonsApi.middleware,
             tasksApi.middleware,
+            solutionsApi.middleware,
         )
     ),
 });

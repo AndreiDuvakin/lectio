@@ -10,14 +10,18 @@ class Solution(RootTable):
     __tablename__ = 'solutions'
 
     answer_text: Mapped[str] = mapped_column(nullable=True)
-    assessment_text: Mapped[str] = mapped_column(String(50), nullable=True)
+    assessment: Mapped[int] = mapped_column(nullable=True)
 
     assessment_autor_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
     task_id: Mapped[int] = mapped_column(ForeignKey('tasks.id'), nullable=False)
     student_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
 
     assessment_autor: Mapped['User'] = relationship('User', back_populates='assessments',
-                                                    foreign_keys=[assessment_autor_id])
+                                                    foreign_keys=[assessment_autor_id], lazy='joined')
     student: Mapped['User'] = relationship('User', back_populates='my_solutions', foreign_keys=[student_id])
 
     files: Mapped[List['SolutionFile']] = relationship('SolutionFile', back_populates='solution')
+    solution_comments: Mapped[List['SolutionComment']] = relationship(
+        'SolutionComment',
+        back_populates='solution',
+    )

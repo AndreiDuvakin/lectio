@@ -16,7 +16,7 @@ import {
     setSelectedTaskToUpdate,
     setSelectedTaskToView
 } from "../../../Redux/Slices/tasksSlice.js";
-import {useGetTasksByCourseIdQuery} from "../../../Api/tasksApi.js";
+import {useDeleteTaskMutation, useGetTasksByCourseIdQuery} from "../../../Api/tasksApi.js";
 
 
 const useCourseDetailPage = (courseId) => {
@@ -58,6 +58,10 @@ const useCourseDetailPage = (courseId) => {
         deleteLesson,
     ] = useDeleteLessonMutation();
 
+    const [
+        deleteTask,
+    ] = useDeleteTaskMutation();
+
     const handleDeleteLesson = async (lessonId) => {
         try {
             await deleteLesson(lessonId);
@@ -77,7 +81,20 @@ const useCourseDetailPage = (courseId) => {
     };
 
     const handleDeleteTask = async (taskId) => {
-
+        try {
+            await deleteTask(taskId);
+            notification.success({
+                title: "Успешно",
+                description: "Задание удалено",
+                placement: "topRight",
+            });
+        } catch (error) {
+            notification.error({
+                title: "Ошибка",
+                description: error?.data?.detail || "Произошла ошибка при удалении задания",
+                placement: "topRight",
+            })
+        }
     };
 
     useEffect(() => {

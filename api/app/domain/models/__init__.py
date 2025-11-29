@@ -15,6 +15,7 @@ from app.domain.models.enrollments import Enrollment
 from app.domain.models.lesson_files import LessonFile
 from app.domain.models.lessons import Lesson
 from app.domain.models.roles import Role
+from app.domain.models.solution_comments import SolutionComment
 from app.domain.models.solution_files import SolutionFile
 from app.domain.models.solutions import Solution
 from app.domain.models.statuses import Status

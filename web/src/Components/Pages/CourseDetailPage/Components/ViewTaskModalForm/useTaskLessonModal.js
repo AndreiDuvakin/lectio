@@ -2,8 +2,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSelectedTaskToView} from "../../../../../Redux/Slices/tasksSlice.js";
 import {notification} from "antd";
 import CONFIG from "../../../../../Core/сonfig.js";
-import {useState} from "react";
+import {useMemo, useRef, useState} from "react";
 import {useGetTaskFilesListQuery} from "../../../../../Api/tasksApi.js";
+import {useGetAuthenticatedUserDataQuery} from "../../../../../Api/usersApi.js";
+import {
+    useCreateSolutionMutation, useDeleteSolutionMutation,
+    useGetTaskStudentSolutionsQuery,
+    useUploadFileMutation
+} from "../../../../../Api/solutionsApi.js";
+import {ROLES} from "../../../../../Core/constants.js";
 
 
 const useViewTaskModal = () => {
@@ -13,11 +20,112 @@ const useViewTaskModal = () => {
         selectedTaskToView
     } = useSelector((state) => state.tasks);
 
+    const [
+        craeteColution,
+        {
+            isLoading: isCreatingSolution,
+            isError: isErrorCreatingSoltion
+        }
+    ] = useCreateSolutionMutation();
+
     const modalIsOpen = selectedTaskToView !== null;
+
+    const [draftFiles, setDraftFiles] = useState([]);
+    const [uploadFile] = useUploadFileMutation();
+    const [deleteSolution] = useDeleteSolutionMutation();
+
+    const handleAddFile = (file) => {
+        const maxSize = 50 * 1024 * 1024; // 50 мегабайт
+        if (file.size > maxSize) {
+            notification.error({
+                message: "Ошибка вставки",
+                description: "Файл слишком большой.",
+                placement: "topRight",
+            });
+            return false;
+        }
+        setDraftFiles((prev) => [...prev, file]);
+        return false;
+    };
+
+    const handleDeleSolution = async (solutionId) => {
+        try {
+            await deleteSolution(solutionId);
+
+            notification.success({
+                title: "Успех",
+                description: "Задание успешно удалено!",
+                placement: "topRight",
+            })
+        } catch (error) {
+            notification.error({
+                title: "Ошибка",
+                description: error?.data?.detail || "Не удалось удалить задание",
+                placement: "topRight",
+            })
+        }
+    };
+
+    const handleRemoveFile = (file) => {
+        setDraftFiles((prev) => prev.filter((f) => f.uid !== file.uid));
+    };
+
+    const editorRef = useRef(null);
+
+    const handleOk = async () => {
+        try {
+            const content = editorRef.current?.value || "";
+
+            const solutionData = {
+                answer_text: content,
+            };
+
+            const response = await craeteColution({
+                taskId: selectedTaskToView?.id,
+                solution: solutionData,
+            }).unwrap();
+
+            for (const file of draftFiles) {
+                try {
+                    await uploadFile({
+                        solutionId: response.id,
+                        fileData: file,
+                    }).unwrap();
+                } catch (error) {
+                    console.error(`Error uploading file ${file.name}:`, error);
+                    const errorMessage = error.data?.detail
+                        ? JSON.stringify(error.data.detail, null, 2)
+                        : JSON.stringify(error.data || error.message || "Неизвестная ошибка", null, 2);
+                    notification.error({
+                        title: "Ошибка загрузки файла",
+                        description: `Не удалось загрузить файл ${file.name}: ${errorMessage}`,
+                        placement: "topRight",
+                    });
+                }
+            }
+
+            notification.success({
+                title: "Успех",
+                description: "Задание успешно создано!",
+                placement: "topRight",
+            });
+
+            if (editorRef.current) {
+                editorRef.current.value = "";
+            }
+        } catch (error) {
+            notification.error({
+                title: "Ошибка",
+                description: error?.data?.detail || "Не удалось создать задание",
+                placement: "topRight",
+            });
+        }
+    };
 
     const handleClose = () => {
         dispatch(setSelectedTaskToView(null));
     };
+
 
     const {
         data: currentTaskFiles = [],
@@ -25,6 +133,24 @@ const useViewTaskModal = () => {
         isError: isCurrentTaskFilesError
     } = useGetTaskFilesListQuery(selectedTaskToView?.id, {
         skip: !selectedTaskToView?.id
+    });
+
+    const {
+        data: currentUser = {},
+        isLoading: isCurrentUserLoading,
+        isError: isCurrentUserError,
+    } = useGetAuthenticatedUserDataQuery();
+
+    const {
+        data: mySolutions = [],
+        isLoading: isMySolutionsLoading,
+        isError: isMySolutionsError
+    } = useGetTaskStudentSolutionsQuery({
+        taskId: selectedTaskToView?.id,
+        studentId: currentUser?.id
+    }, {
+        skip: !selectedTaskToView?.id || currentUser?.role?.title !== ROLES.STUDENT,
+        pollingInterval: 5000,
     });
 
     const [downloadingFiles, setDownloadingFiles] = useState({});
@@ -41,15 +167,14 @@ const useViewTaskModal = () => {
                     placement: "topRight",
                 });
                 return;
-            }
+            };
 
-            const response = await fetch(`${CONFIG.BASE_URL}/tasks/file/${fileId}/`, {
+            const response = await fetch(`${CONFIG.BASE_URL}/solutions/file/${fileId}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -59,7 +184,7 @@ const useViewTaskModal = () => {
                     placement: "topRight",
                 });
                 return;
-            }
+            };
 
             const contentType = response.headers.get('content-type');
             if (!contentType || contentType.includes('text/html')) {
@@ -105,6 +230,70 @@ const useViewTaskModal = () => {
         }
     };
 
+    const joditConfig = useMemo(
+        () => ({
+            readonly: false,
+            height: 150,
+            toolbarAdaptive: false,
+            buttons: [
+                "bold", "italic", "underline", "strikethrough", "|",
+                "superscript", "subscript", "|",
+                "ul", "ol", "outdent", "indent", "|",
+                "font", "fontsize", "brush", "paragraph", "|",
+                "align", "hr", "|",
+                "table", "link", "image", "video", "symbols", "|",
+                "undo", "redo", "cut", "copy", "paste", "selectall", "eraser", "|",
+                "find", "source", "fullsize", "print", "preview",
+            ],
+            autofocus: false,
+            preserveSelection: true,
+            askBeforePasteHTML: false,
+            askBeforePasteFromWord: false,
+            defaultActionOnPaste: "insert_clear_html",
+            spellcheck: true,
+            placeholder: "Заполните содержимое задания",
+            showCharsCounter: true,
+            showWordsCounter: true,
+            showXPathInStatusbar: false,
+            toolbarSticky: true,
+            toolbarButtonSize: "middle",
+            cleanHTML: {
+                removeEmptyElements: true,
+                replaceNBSP: false,
+            },
+            hotkeys: {
+                "ctrl + shift + f": "find",
+                "ctrl + b": "bold",
+                "ctrl + i": "italic",
+                "ctrl + u": "underline",
+            },
+            image: {
+                editSrc: true,
+                editTitle: true,
+                editAlt: true,
+                openOnDblClick: false,
+            },
+            video: {
+                allowedSources: ["youtube", "vimeo"],
+            },
+            uploader: {
+                insertImageAsBase64URI: true,
+            },
+            paste: {
+                insertAsBase64: true,
+                mimeTypes: ["image/png", "image/jpeg", "image/gif"],
+                maxFileSize: 5 * 1024 * 1024,
+                error: () => {
+                    notification.error({
+                        title: "Ошибка вставки",
+                        description: "Файл слишком большой или неподдерживаемый формат.",
+                        placement: "topRight",
+                    });
+                },
+            },
+        }),
+        []
+    );
 
     return {
         selectedTaskToView,
@@ -114,7 +303,16 @@ const useViewTaskModal = () => {
         isCurrentTaskFilesLoading,
         isCurrentTaskFilesError,
         downloadFile,
-        downloadingFiles
+        downloadingFiles,
+        currentUser,
+        mySolutions,
+        editorRef,
+        joditConfig,
+        handleAddFile,
+        handleRemoveFile,
+        handleOk,
+        draftFiles,
+        handleDeleSolution
     }
 };
 

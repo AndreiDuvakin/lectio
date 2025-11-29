@@ -12,7 +12,7 @@ const useCreateTaskModalForm = ({courseId}) => {
     } = useSelector((state) => state.tasks);
     const [form] = Form.useForm();
 
-    const [createtask, {isLoading}] = useCreateTaskMutation();
+    const [createTask, {isLoading}] = useCreateTaskMutation();
     const [draftFiles, setDraftFiles] = useState([]);
     const [uploadFile] = useUploadFileMutation();
 
@@ -57,7 +57,7 @@ const useCreateTaskModalForm = ({courseId}) => {
                 number: values.number || 1,
             };
 
-             const response = await createtask({
+             const response = await createTask({
                 courseId,
                 taskData,
             }).unwrap();
