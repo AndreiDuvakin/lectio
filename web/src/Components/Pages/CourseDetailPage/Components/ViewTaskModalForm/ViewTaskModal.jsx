@@ -4,7 +4,7 @@ import {
     Col, Collapse,
     Divider,
     Empty, Flex,
-    Form,
+    Form, Input, InputNumber,
     Modal,
     Popconfirm,
     Row,
@@ -47,7 +47,10 @@ const ViewTaskModal = () => {
         handleRemoveFile,
         handleOk,
         draftFiles,
-        handleDeleSolution
+        handleDeleSolution,
+        allSolutions,
+        onAssessmentFinish,
+        assessmentForm,
     } = useViewTaskModal();
 
     return (
@@ -214,9 +217,9 @@ const ViewTaskModal = () => {
                                                         onClick={() => downloadFile(file.id, file.filename)}
                                                         loading={downloadingFiles[file.id]}
                                                     >
-                  <span style={{marginLeft: 8}}>
-                    {file.filename} ({(file.file_size / 1024 / 1024).toFixed(2)} МБ)
-                  </span>
+                                                          <span style={{marginLeft: 8}}>
+                                                            {file.filename}
+                                                          </span>
                                                         <DownloadOutlined style={{marginLeft: 8, color: "#1890ff"}}/>
                                                     </Button>
                                                 ))}
@@ -259,9 +262,116 @@ const ViewTaskModal = () => {
                     </Button>
                 </Col>
             ) : [ROLES.ADMIN, ROLES.TEACHER].includes(currentUser?.role?.title) && (
-                <></>
-            )}
+                <Col>
+                    <Title level={3}>Присланные решения</Title>
+                    {allSolutions.length > 0 ? (
+                        <Collapse accordion>
+                            {allSolutions.map((solution) => (
+                                <Panel
+                                    key={solution.id}
+                                    header={
+                                        <Flex justify="space-between" align="center">
+                                            <Text strong>Решение
+                                                от {new Date(solution.created_at).toLocaleString("ru-RU")}</Text>
+                                            {solution.assessment !== null ? (
+                                                <Tag
+                                                    color={solution.assessment >= 80 ? "green" : solution.assessment >= 60 ? "orange" : "red"}>
+                                                    Оценка: {solution.assessment} / 100
+                                                </Tag>
+                                            ) : (
+                                                <Tag color="red">Ждет проверки</Tag>
+                                            )}
+                                        </Flex>
+                                    }
+                                    extra={
+                                        solution.assessment !== null && (
+                                            <Tag color="purple">
+                                                Проверено: {solution.assessment_autor?.first_name} {solution.assessment_autor?.last_name}
+                                            </Tag>
+                                        )
+                                    }
+                                >
+                                    <div style={{marginBottom: 16}}>
+                                        <Text strong>Ответ:</Text>
+                                        <div
+                                            style={{
+                                                background: "#f9f9f9",
+                                                padding: 16,
+                                                borderRadius: 8,
+                                                margin: "12px 0",
+                                                border: "1px solid #f0f0f0",
+                                                minHeight: 60,
+                                            }}
+                                            dangerouslySetInnerHTML={{__html: solution.answer_text || "<em>Текст ответа отсутствует</em>"}}
+                                        />
+                                    </div>
 
+                                    {solution.files && solution.files.length > 0 ? (
+                                        <div>
+                                            <Text strong>Прикреплённые файлы:</Text>
+                                            <div style={{
+                                                marginTop: 8,
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: 8
+                                            }}>
+                                                {solution.files.map((file) => (
+                                                    <Button
+                                                        key={file.id}
+                                                        type="dashed"
+                                                        icon={<FileOutlined/>}
+                                                        style={{textAlign: "left"}}
+                                                        onClick={() => downloadFile(file.id, file.filename)}
+                                                        loading={downloadingFiles[file.id]}
+                                                    >
+                  <span style={{marginLeft: 8}}>
+                    {file.filename}
+                  </span>
+                                                        <DownloadOutlined style={{marginLeft: 8, color: "#1890ff"}}/>
+                                                    </Button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <Text type="secondary">Файлы не прикреплены</Text>
+                                    )}
+                                    <Title level={3}>Оценка</Title>
+                                    <Form form={assessmentForm} name={"assessmentForm"} onFinish={() => {
+                                        onAssessmentFinish(solution.id)
+                                    }}>
+                                        <Form.Item
+                                            name={"assessment"}
+                                            rules={[{required: true, message: "Укажите оценку"}]}
+                                        >
+                                            <InputNumber
+                                                min={1}
+                                                max={100}
+                                                placeholder={"Выставите балл от 1 до 100"}
+                                                style={{
+                                                    minWidth: "230px"
+                                                }}
+                                                defaultValue={solution.assessment || null}
+                                                required
+                                            />
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button type={"primary"} htmlType={"submit"}>
+                                                Выставить оценку
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </Panel>
+                            ))}
+                        </Collapse>
+                    ) : (
+                        <Empty
+                            image={Empty.PRESENTED_IMAGE_SIMPLE}
+                            description="Решений пока нет"
+                        />
+                    )}
+                </Col>
+            )}
+            <Divider/>
             <div style={{textAlign: "right"}}>
                 <Button onClick={handleClose}>
                     Закрыть

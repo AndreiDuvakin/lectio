@@ -1,12 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
 import {setSelectedTaskToView} from "../../../../../Redux/Slices/tasksSlice.js";
-import {notification} from "antd";
+import {Form, notification} from "antd";
 import CONFIG from "../../../../../Core/сonfig.js";
 import {useMemo, useRef, useState} from "react";
 import {useGetTaskFilesListQuery} from "../../../../../Api/tasksApi.js";
 import {useGetAuthenticatedUserDataQuery} from "../../../../../Api/usersApi.js";
 import {
-    useCreateSolutionMutation, useDeleteSolutionMutation,
+    useCreateAssessmentMutation,
+    useCreateSolutionMutation, useDeleteSolutionMutation, useGetTaskSolutionsQuery,
     useGetTaskStudentSolutionsQuery,
     useUploadFileMutation
 } from "../../../../../Api/solutionsApi.js";
@@ -20,8 +21,10 @@ const useViewTaskModal = () => {
         selectedTaskToView
     } = useSelector((state) => state.tasks);
 
+    const [assessmentForm] = Form.useForm();
+
     const [
-        craeteColution,
+        createSolution,
         {
             isLoading: isCreatingSolution,
             isError: isErrorCreatingSoltion
@@ -80,7 +83,7 @@ const useViewTaskModal = () => {
                 answer_text: content,
             };
 
-            const response = await craeteColution({
+            const response = await createSolution({
                 taskId: selectedTaskToView?.id,
                 solution: solutionData,
             }).unwrap();
@@ -154,6 +157,14 @@ const useViewTaskModal = () => {
         pollingInterval: 5000,
     });
 
+    const {
+        data: allSolutions = [],
+        isLoading: isAllSolutionsLoading,
+    } = useGetTaskSolutionsQuery(selectedTaskToView?.id, {
+        skip: !selectedTaskToView?.id || ![ROLES.TEACHER, ROLES.ADMIN].includes(currentUser?.role?.title),
+        pollingInterval: 5000,
+    })
+
     const [downloadingFiles, setDownloadingFiles] = useState({});
 
     const downloadFile = async (fileId, fileName) => {
@@ -168,7 +179,8 @@ const useViewTaskModal = () => {
                     placement: "topRight",
                 });
                 return;
-            };
+            }
+
 
             const response = await fetch(`${CONFIG.BASE_URL}/solutions/file/${fileId}/`, {
                 method: 'GET',
@@ -185,7 +197,8 @@ const useViewTaskModal = () => {
                     placement: "topRight",
                 });
                 return;
-            };
+            }
+
 
             const contentType = response.headers.get('content-type');
             if (!contentType || contentType.includes('text/html')) {
@@ -228,6 +241,32 @@ const useViewTaskModal = () => {
             });
         } finally {
             setDownloadingFiles((prev) => ({...prev, [fileId]: false}));
+        }
+    };
+
+    const [
+        createAssessment,
+    ] = useCreateAssessmentMutation();
+
+    const onAssessmentFinish = async (solutionId) => {
+        const values = await assessmentForm.validateFields();
+        try {
+            await createAssessment({
+                solutionId,
+                assessment: values,
+            });
+
+            notification.success({
+                title: "Успех",
+                description: "Оценка выставлена",
+                placement: "topRight",
+            });
+        } catch (e) {
+            notification.error({
+                title: "Ошибка",
+                description: e.message || "Не удалось выставить оценку",
+                placement: "topRight",
+            });
         }
     };
 
@@ -313,7 +352,10 @@ const useViewTaskModal = () => {
         handleRemoveFile,
         handleOk,
         draftFiles,
-        handleDeleSolution
+        handleDeleSolution,
+        allSolutions,
+        onAssessmentFinish,
+        assessmentForm,
     }
 };
 

@@ -23,6 +23,9 @@ class SolutionsRepository:
         query = (
             select(Solution)
             .filter_by(task_id=task_id)
+            .options(
+                selectinload(Solution.files),
+            )
         )
         result = await self.db.execute(query)
         return result.scalars().all()
@@ -42,6 +45,11 @@ class SolutionsRepository:
         self.db.add(solution)
         await self.db.commit()
         await self.db.refresh(solution)
+        return solution
+
+    async def update(self, solution: Solution) -> Solution:
+        await self.db.merge(solution)
+        await self.db.commit()
         return solution
 
     async def delete(self, solution: Solution) -> Solution:

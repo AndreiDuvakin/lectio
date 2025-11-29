@@ -34,3 +34,7 @@ class SolutionRead(SolutionAfterCreate):
 
     class Config:
         from_attributes = True
+
+
+class AssessmentCreate(BaseModel):
+    assessment: int = Field(...)

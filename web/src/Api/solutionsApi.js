@@ -59,6 +59,14 @@ export const solutionsApi = createApi({
             },
             invalidatesTags: ["task"],
         }),
+        createAssessment: builder.mutation({
+            query: ({solutionId, assessment}) => ({
+                url: `/solutions/assessment/${solutionId}/`,
+                method: "POST",
+                body: assessment,
+            }),
+            invalidatesTags: ["lesson"],
+        }),
     }),
 });
 
@@ -69,5 +77,6 @@ export const {
     useDeleteSolutionMutation,
     useGetSolutionFilesListQuery,
     useUploadFileMutation,
+    useCreateAssessmentMutation,
 } = solutionsApi;
 

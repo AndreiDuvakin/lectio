@@ -8,7 +8,7 @@ from app.application.solution_files_repository import SolutionFilesRepository
 from app.application.solutions_repository import SolutionsRepository
 from app.application.tasks_repository import TasksRepository
 from app.application.users_repository import UsersRepository
-from app.domain.entities.solutions import SolutionRead, SolutionCreate, SolutionAfterCreate
+from app.domain.entities.solutions import SolutionRead, SolutionCreate, SolutionAfterCreate, AssessmentCreate
 from app.domain.models import User, Solution
 from app.settings import Settings
 
@@ -66,6 +66,20 @@ class SolutionsService:
             )
 
         return response
+
+    async def create_assessment(self, solution_id: int, assessment: AssessmentCreate, user: User) -> None:
+        solution_model = await self.solutions_repository.get_by_id(solution_id)
+
+        if solution_model is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Такого решения не найдено"
+            )
+
+        solution_model.assessment = assessment.assessment
+        solution_model.assessment_autor_id = user.id
+
+        await self.solutions_repository.update(solution_model)
 
     async def create(self, solution: SolutionCreate, creator: User, task_id: int) -> SolutionAfterCreate:
         task_model = await self.tasks_repository.get_by_id(task_id)

@@ -6,9 +6,9 @@ from starlette.responses import FileResponse
 
 from app.database.session import get_db
 from app.domain.entities.solution_files import ReadSolutionFile
-from app.domain.entities.solutions import SolutionCreate, SolutionRead, SolutionAfterCreate
+from app.domain.entities.solutions import SolutionCreate, SolutionRead, SolutionAfterCreate, AssessmentCreate
 from app.domain.models import User
-from app.infrastructure.dependencies import require_auth_user
+from app.infrastructure.dependencies import require_auth_user, require_teacher
 from app.infrastructure.solution_files_service import SolutionFilesService
 from app.infrastructure.solutions_service import SolutionsService
 
@@ -123,3 +123,20 @@ async def upload_file(
 ):
     task_files_service = SolutionFilesService(db)
     return await task_files_service.upload_file(task_id, file)
+
+
+@solution_router.post(
+    '/assessment/{solution_id}/',
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary='Set assessment for solution',
+    description='Set assessment for solution',
+)
+async def create_assessment(
+        solution_id: int,
+        assessment_data: AssessmentCreate,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(require_teacher),
+):
+    solutions_service = SolutionsService(db)
+    await solutions_service.create_assessment(solution_id, assessment_data, current_user)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
