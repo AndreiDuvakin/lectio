@@ -31,6 +31,7 @@ import ViewLessonModal from "./Components/ViewLessonModalForm/ViewLessonModal.js
 import UpdateLessonModalForm from "./Components/UpdateLessonModalForm/UpdateLessonModalForm.jsx";
 import CreateTaskModalForm from "./Components/CreateTaskModalForm/CreateTaskModalForm.jsx";
 import UpdateTaskModalForm from "./Components/UpdateTaskModalForm/UpdateTaskModalForm.jsx";
+import ViewTaskModal from "./Components/ViewTaskModalForm/ViewTaskModal.jsx";
 
 
 const {Title, Text} = Typography;
@@ -216,6 +217,9 @@ const CourseDetailPage = () => {
             <UpdateLessonModalForm/>
 
             <CreateTaskModalForm
+                courseId={courseId}
+            />
+            <ViewTaskModal
                 courseId={courseId}
             />
             <UpdateTaskModalForm/>
