@@ -7,9 +7,10 @@ import {
     setSelectedLessonToUpdate,
     setSelectedLessonToView
 } from "../../../Redux/Slices/lessonsSlice.js";
-import {useGetLessonsByCourseIdQuery} from "../../../Api/lessonsApi.js";
+import {useDeleteLessonMutation, useGetLessonsByCourseIdQuery} from "../../../Api/lessonsApi.js";
 import {ROLES} from "../../../Core/constants.js";
 import CONFIG from "../../../Core/сonfig.js";
+import {notification} from "antd";
 
 
 const useCourseDetailPage = (courseId) => {
@@ -39,6 +40,28 @@ const useCourseDetailPage = (courseId) => {
         pollingInterval: 10000,
     });
 
+    const [
+        deleteLesson,
+    ] = useDeleteLessonMutation();
+
+    const handleDeleteLesson = async (lessonId) => {
+        try {
+            await deleteLesson(lessonId);
+
+            notification.success({
+                title: "Успешно",
+                description: "Лекция удалена",
+                placement: "topRight",
+            });
+        } catch (error) {
+            notification.error({
+                title: "Ошибка",
+                description: error?.data?.detail || "Произошла ошибка при удалении лекции",
+                placement: "topRight",
+            })
+        }
+    };
+
     useEffect(() => {
         window.document.title = `Система обучения lectio - Курс: ${courseData?.title}`;
     }, [courseData]);
@@ -67,6 +90,7 @@ const useCourseDetailPage = (courseId) => {
         handleCreateLesson,
         handleOpenLesson,
         handleEditLesson,
+        handleDeleteLesson,
     }
 };
 

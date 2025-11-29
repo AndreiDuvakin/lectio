@@ -78,7 +78,7 @@ async def update_lesson(
 
 
 @lessons_router.delete(
-    '/{lesson_id}',
+    '/{lesson_id}/',
     response_model=Optional[LessonRead],
     summary='Delete a lesson',
     description='Delete a lesson',
@@ -89,8 +89,7 @@ async def delete_lesson(
         current_user: User = Depends(require_teacher),
 ):
     lessons_service = LessonsService(db)
-    await lessons_service.delete(lesson_id, current_user)
-    return None
+    return await lessons_service.delete(lesson_id, current_user)
 
 
 @lessons_router.get(

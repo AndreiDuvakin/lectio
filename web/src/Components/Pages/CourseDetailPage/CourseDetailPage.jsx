@@ -46,6 +46,7 @@ const CourseDetailPage = () => {
         handleCreateLesson,
         handleOpenLesson,
         handleEditLesson,
+        handleDeleteLesson,
     } = useCourseDetailPage(courseId);
 
     if (isLoading) {
@@ -112,10 +113,10 @@ const CourseDetailPage = () => {
                                             <Popconfirm
                                                 title="Удалить лекцию?"
                                                 description="Это действие нельзя отменить"
-                                                // onConfirm={(e) => {
-                                                //     e?.stopPropagation();
-                                                //     handleDeleteLesson(lesson.id);
-                                                // }}
+                                                onConfirm={(e) => {
+                                                    e?.stopPropagation();
+                                                    handleDeleteLesson(lesson.id);
+                                                }}
                                                 okText="Удалить"
                                                 cancelText="Отмена"
                                             >
@@ -132,12 +133,17 @@ const CourseDetailPage = () => {
                             >
                                 <div style={{marginBottom: 16}}>
                                     {lesson.description ? (
-                                        <Text type="secondary">{lesson.description}</Text>
+                                        <Text type="secondary">
+                                            {lesson.description.slice(0, 100)}...
+                                        </Text>
                                     ) : (
                                         <Text type="secondary" italic>Описание отсутствует</Text>
                                     )}
                                 </div>
 
+                                <Text>
+                                    Лекционный материал
+                                </Text>
                                 <div style={{marginTop: 16, display: "flex", alignItems: "center", gap: 8}}>
                                     <Avatar size="small" style={{backgroundColor: "#1890ff"}}>
                                         {userData?.first_name?.[0] || "У"}
