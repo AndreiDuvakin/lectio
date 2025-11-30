@@ -37,7 +37,7 @@ const ViewTaskModal = () => {
         currentTaskFiles,
         isCurrentTaskFilesLoading,
         isCurrentTaskFilesError,
-        downloadFile,
+        downloadTasksFile,
         downloadingFiles,
         currentUser,
         mySolutions,
@@ -55,6 +55,7 @@ const ViewTaskModal = () => {
         commentForm,
         setComment,
         comment,
+        downloadSolutionFile,
     } = useViewTaskModal();
 
     return (
@@ -126,7 +127,7 @@ const ViewTaskModal = () => {
                         <span>{file.filename || "Не указан"}</span>
                         <div>
                             <Button
-                                onClick={() => downloadFile(file.id, file.filename)}
+                                onClick={() => downloadTasksFile(file.id, file.filename)}
                                 loading={downloadingFiles[file.id] || false}
                                 disabled={downloadingFiles[file.id] || false}
                                 type={"dashed"}
@@ -218,7 +219,7 @@ const ViewTaskModal = () => {
                                                         type="dashed"
                                                         icon={<FileOutlined/>}
                                                         style={{textAlign: "left"}}
-                                                        onClick={() => downloadFile(file.id, file.filename)}
+                                                        onClick={() => downloadSolutionFile(file.id, file.filename)}
                                                         loading={downloadingFiles[file.id]}
                                                     >
                                                           <span style={{marginLeft: 8}}>
@@ -404,7 +405,7 @@ const ViewTaskModal = () => {
                                                         type="dashed"
                                                         icon={<FileOutlined/>}
                                                         style={{textAlign: "left"}}
-                                                        onClick={() => downloadFile(file.id, file.filename)}
+                                                        onClick={() => downloadSolutionFile(file.id, file.filename)}
                                                         loading={downloadingFiles[file.id]}
                                                     >
                   <span style={{marginLeft: 8}}>
