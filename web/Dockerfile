@@ -9,7 +9,7 @@ RUN npm install
 COPY . .
 
 ARG VITE_BASE_URL
-ENV VITE_BASE_URL=https://api.lectio.numerum.team/api/v1
+ENV VITE_BASE_URL=http://localhost:8000/api/v1
 ARG VITE_ROOT_ROLE_NAME
 ENV VITE_ROOT_ROLE_NAME=root
 RUN npm run build

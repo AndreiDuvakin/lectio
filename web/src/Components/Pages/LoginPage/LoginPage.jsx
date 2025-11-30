@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Form, Input, Typography } from "antd";
+import {Button, Col, Flex, Form, Input, Space, Image, Typography} from "antd";
 import { Link } from "react-router-dom";
 import useLoginPage from "./useLoginPage.js";
 
@@ -24,6 +24,31 @@ const LoginPage = () => {
             gap={24}
         >
             <Col style={pageContainerStyle}>
+                <Space direction="horizontal" style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }} size="large">
+                    <Image
+                        src="/rounded_logo.png"
+                        style={{
+                            width: 80,
+                            marginBottom: 10,
+                            borderRadius: 20,
+                            border: "1px solid #ddd",
+                        }}
+                        preview={false}
+                        alt="Lectio API Logo"
+                    />
+                    <Title level={1} style={{
+                        textAlign: "center",
+                        color: "#1890ff",
+                        marginBottom: 40,
+                    }}>
+                        Lectio
+                    </Title>
+                </Space>
                 <Title style={{ textAlign: 'center', marginBottom: 24 }}>Аутентификация</Title>
                 <Form name="login" onFinish={onFinish}>
                     <Form.Item
