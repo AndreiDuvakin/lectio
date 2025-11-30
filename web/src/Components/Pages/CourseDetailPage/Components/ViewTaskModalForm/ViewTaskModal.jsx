@@ -163,22 +163,6 @@ const ViewTaskModal = () => {
                                             ) : (
                                                 <Tag color="blue">На проверке</Tag>
                                             )}
-
-                                            <Popconfirm
-                                                title={`Удалить ответ на задание?`}
-                                                description="Это действие нельзя отменить"
-                                                onConfirm={(e) => {
-                                                    handleDeleSolution(solution.id)
-                                                }}
-                                                okText="Удалить"
-                                                cancelText="Отмена"
-                                            >
-                                                <Button
-                                                    type="text"
-                                                    danger
-                                                    icon={<DeleteOutlined/>}
-                                                />
-                                            </Popconfirm>
                                         </Flex>
                                     }
                                     extra={
