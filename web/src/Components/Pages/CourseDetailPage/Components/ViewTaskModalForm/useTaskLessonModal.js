@@ -23,6 +23,7 @@ const useViewTaskModal = () => {
     } = useSelector((state) => state.tasks);
 
     const [assessmentForm] = Form.useForm();
+    const [comment, setComment] = useState("");
 
     const [
         createSolution,
@@ -43,34 +44,35 @@ const useViewTaskModal = () => {
         isError: isErrorCreatingComment
     }] = useCreateCommentMutation();
 
-    const onCommentSubmit = async (solutionId, commentText) => {
-        if (!commentText?.trim()) return;
+    const onCommentSubmit = async (solutionId) => {
+        if (!comment?.trim()) return;
 
         try {
             await createComment({
                 solutionId: solutionId,
                 comment: {
-                    comment_text: commentText.trim()
+                    comment_text: comment.trim()
                 }
             }).unwrap();
-            commentForm.resetFields();
+            setComment("");
             notification.success({
-                message: "Комментарий отправлен",
+                title: "Комментарий отправлен",
                 description: "Ваш комментарий успешно добавлен",
             });
         } catch (error) {
             notification.error({
-                message: "Ошибка",
+                title: "Ошибка",
                 description: error?.data?.detail || "Не удалось отправить комментарий",
             });
         }
     };
 
+
     const handleAddFile = (file) => {
         const maxSize = 50 * 1024 * 1024; // 50 мегабайт
         if (file.size > maxSize) {
             notification.error({
-                message: "Ошибка вставки",
+                title: "Ошибка вставки",
                 description: "Файл слишком большой.",
                 placement: "topRight",
             });
@@ -387,6 +389,8 @@ const useViewTaskModal = () => {
         onAssessmentFinish,
         assessmentForm,
         onCommentSubmit,
+        setComment,
+        comment,
     }
 };
 

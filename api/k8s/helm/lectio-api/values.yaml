@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  repository: andreiduvakin/lectio-api
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  limits:
+    memory: 128Mi
+    cpu: 200m
+
+persistence:
+  path: /mnt/k8s_storage/lectio-api
+  uploads:
+    enabled: true
+    size: 7Gi
+    containerPath: /app/uploads
+
+ingress:
+  secretTLSName: lectio-api-tls-secret
+
+  domain: api.lectio.numerum.team
+
+  path: /
+  pathType: Prefix
+
+env:
+  DB_DRIVER: postgresql+asyncpg
+  DB_HOST: db.numerum.team
+  DB_PORT: 30000
+  DB_USER: lectio
+  DB_NAME: lectio
+  DB_SCHEMA: public

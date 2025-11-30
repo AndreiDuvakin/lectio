@@ -8,6 +8,7 @@ import ProfilePage from "../Components/Pages/ProfilePage/ProfilePage.jsx";
 import AdminPage from "../Components/Pages/AdminPage/AdminPage.jsx";
 import CourseDetailPage from "../Components/Pages/CourseDetailPage/CourseDetailPage.jsx";
 import CoursesPage from "../Components/Pages/CoursesPage/CoursesPage.jsx";
+import GradebookPage from "../Components/Pages/GradebookPage/GradebookPage.jsx";
 
 
 const AppRouter = () => (
@@ -20,6 +21,7 @@ const AppRouter = () => (
                 <Route path={"/courses"} element={<CoursesPage/>}/>
                 <Route path={"/profile"} element={<ProfilePage/>}/>
                 <Route path="/courses/:courseId" element={<CourseDetailPage />} />
+                <Route path="/courses/:courseId/gradebook" element={<GradebookPage />} />
                 <Route path={"*"} element={<Navigate to={"/courses"}/>}/>
             </Route>
         </Route>

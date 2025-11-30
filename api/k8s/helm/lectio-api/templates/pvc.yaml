@@ -1,0 +1,28 @@
+{{- if .Values.persistence.uploads.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-uploads-pv
+spec:
+  capacity:
+    storage: {{ .Values.persistence.uploads.size }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  hostPath:
+    path: {{ .Values.persistence.path }}/uploads
+    type: DirectoryOrCreate
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-uploads-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.uploads.size }}
+  volumeName: {{ .Release.Name }}-uploads-pv
+{{- end }}

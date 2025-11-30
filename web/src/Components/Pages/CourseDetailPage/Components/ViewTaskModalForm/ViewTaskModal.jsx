@@ -52,7 +52,9 @@ const ViewTaskModal = () => {
         onAssessmentFinish,
         assessmentForm,
         onCommentSubmit,
-        commentForm
+        commentForm,
+        setComment,
+        comment,
     } = useViewTaskModal();
 
     return (
@@ -230,7 +232,7 @@ const ViewTaskModal = () => {
                                     ) : (
                                         <Text type="secondary">Файлы не прикреплены</Text>
                                     )}
-                                    <div style={{ marginTop: 32 }}>
+                                    <div style={{marginTop: 32}}>
                                         <Title level={4}>Комментарии к решению</Title>
 
                                         <div
@@ -247,10 +249,13 @@ const ViewTaskModal = () => {
                                                 <List
                                                     dataSource={solution.solution_comments}
                                                     renderItem={(comment) => (
-                                                        <List.Item style={{ padding: "12px 16px", borderBottom: "1px solid #f0f0f0" }}>
+                                                        <List.Item style={{
+                                                            padding: "12px 16px",
+                                                            borderBottom: "1px solid #f0f0f0"
+                                                        }}>
                                                             <List.Item.Meta
                                                                 avatar={
-                                                                    <Avatar style={{ backgroundColor: "#1890ff" }}>
+                                                                    <Avatar style={{backgroundColor: "#1890ff"}}>
                                                                         {comment.comment_autor.first_name[0]}
                                                                         {comment.comment_autor.last_name[0]}
                                                                     </Avatar>
@@ -261,12 +266,13 @@ const ViewTaskModal = () => {
                                                                             {comment.comment_autor.first_name} {comment.comment_autor.last_name}
                                                                         </Text>
                                                                         {comment.comment_autor.role?.title === "teacher" && (
-                                                                            <Tag color="gold" size="small">Преподаватель</Tag>
+                                                                            <Tag color="gold"
+                                                                                 size="small">Преподаватель</Tag>
                                                                         )}
                                                                     </Space>
                                                                 }
                                                                 description={
-                                                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                                                    <Text type="secondary" style={{fontSize: 12}}>
                                                                         {new Date(comment.created_at || Date.now()).toLocaleString("ru-RU")}
                                                                     </Text>
                                                                 }
@@ -278,7 +284,7 @@ const ViewTaskModal = () => {
                                                                     whiteSpace: "pre-wrap",
                                                                     wordBreak: "break-word",
                                                                 }}
-                                                                dangerouslySetInnerHTML={{ __html: comment.comment_text}}
+                                                                dangerouslySetInnerHTML={{__html: comment.comment_text}}
                                                             />
                                                         </List.Item>
                                                     )}
@@ -287,33 +293,23 @@ const ViewTaskModal = () => {
                                                 <Empty
                                                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                                                     description="Пока нет комментариев"
-                                                    style={{ margin: "20px 0" }}
+                                                    style={{margin: "20px 0"}}
                                                 />
                                             )}
                                         </div>
+                                        <Input.TextArea
+                                            rows={3}
+                                            placeholder="Напишите комментарий к решению..."
+                                            allowClear
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            style={{ marginTop: 20, marginBottom: 20}}
+                                        />
 
-                                        <Form
-                                            onFinish={(values) => onCommentSubmit(solution.id, values.comment)}
-                                            style={{ marginTop: 16 }}
-                                            form={commentForm}
-                                        >
-                                            <Form.Item
-                                                name="comment"
-                                                rules={[{ required: true, message: "Напишите комментарий" }]}
-                                            >
-                                                <Input.TextArea
-                                                    rows={3}
-                                                    placeholder="Напишите комментарий к решению..."
-                                                    allowClear
-                                                />
-                                            </Form.Item>
-
-                                            <Form.Item style={{ marginBottom: 0 }}>
-                                                <Button type="primary" htmlType="submit">
-                                                    Отправить комментарий
-                                                </Button>
-                                            </Form.Item>
-                                        </Form>
+                                        <Button onClick={() => onCommentSubmit(solution.id)} type="primary"
+                                                htmlType="submit">
+                                            Отправить комментарий
+                                        </Button>
                                     </div>
                                 </Panel>
                             ))}
@@ -447,7 +443,7 @@ const ViewTaskModal = () => {
                                             </Button>
                                         </Form.Item>
                                     </Form>
-                                    <div style={{ marginTop: 32 }}>
+                                    <div style={{marginTop: 32}}>
                                         <Title level={4}>Комментарии к решению</Title>
 
                                         <div
@@ -464,10 +460,13 @@ const ViewTaskModal = () => {
                                                 <List
                                                     dataSource={solution.solution_comments}
                                                     renderItem={(comment) => (
-                                                        <List.Item style={{ padding: "12px 16px", borderBottom: "1px solid #f0f0f0" }}>
+                                                        <List.Item style={{
+                                                            padding: "12px 16px",
+                                                            borderBottom: "1px solid #f0f0f0"
+                                                        }}>
                                                             <List.Item.Meta
                                                                 avatar={
-                                                                    <Avatar style={{ backgroundColor: "#1890ff" }}>
+                                                                    <Avatar style={{backgroundColor: "#1890ff"}}>
                                                                         {comment.comment_autor.first_name[0]}
                                                                         {comment.comment_autor.last_name[0]}
                                                                     </Avatar>
@@ -478,12 +477,13 @@ const ViewTaskModal = () => {
                                                                             {comment.comment_autor.first_name} {comment.comment_autor.last_name}
                                                                         </Text>
                                                                         {comment.comment_autor.role?.title === "teacher" && (
-                                                                            <Tag color="gold" size="small">Преподаватель</Tag>
+                                                                            <Tag color="gold"
+                                                                                 size="small">Преподаватель</Tag>
                                                                         )}
                                                                     </Space>
                                                                 }
                                                                 description={
-                                                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                                                    <Text type="secondary" style={{fontSize: 12}}>
                                                                         {new Date(comment.created_at || Date.now()).toLocaleString("ru-RU")}
                                                                     </Text>
                                                                 }
@@ -495,7 +495,7 @@ const ViewTaskModal = () => {
                                                                     whiteSpace: "pre-wrap",
                                                                     wordBreak: "break-word",
                                                                 }}
-                                                                dangerouslySetInnerHTML={{ __html: comment.comment_text}}
+                                                                dangerouslySetInnerHTML={{__html: comment.comment_text}}
                                                             />
                                                         </List.Item>
                                                     )}
@@ -504,33 +504,25 @@ const ViewTaskModal = () => {
                                                 <Empty
                                                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                                                     description="Пока нет комментариев"
-                                                    style={{ margin: "20px 0" }}
+                                                    style={{margin: "20px 0"}}
                                                 />
                                             )}
                                         </div>
 
-                                        <Form
-                                            onFinish={(values) => onCommentSubmit(solution.id, values.comment)}
-                                            style={{ marginTop: 16 }}
-                                            form={commentForm}
-                                        >
-                                            <Form.Item
-                                                name="comment"
-                                                rules={[{ required: true, message: "Напишите комментарий" }]}
-                                            >
-                                                <Input.TextArea
-                                                    rows={3}
-                                                    placeholder="Напишите комментарий к решению..."
-                                                    allowClear
-                                                />
-                                            </Form.Item>
 
-                                            <Form.Item style={{ marginBottom: 0 }}>
-                                                <Button type="primary" htmlType="submit">
-                                                    Отправить комментарий
-                                                </Button>
-                                            </Form.Item>
-                                        </Form>
+                                        <Input.TextArea
+                                            rows={3}
+                                            placeholder="Напишите комментарий к решению..."
+                                            allowClear
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            style={{ marginTop: 20, marginBottom: 20}}
+                                        />
+
+                                        <Button onClick={() => onCommentSubmit(solution.id)} type="primary"
+                                                htmlType="submit">
+                                            Отправить комментарий
+                                        </Button>
                                     </div>
                                 </Panel>
                             ))}

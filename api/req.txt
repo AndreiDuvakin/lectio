@@ -8,3 +8,5 @@ pyjwt==2.9.0
 fastapi==0.115.0
 pydantic[email]==2.11.4
 aiofiles==25.1.0
+uvicorn==0.34.0
+python-multipart==0.0.12

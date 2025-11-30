@@ -156,7 +156,7 @@ const CoursesPage = () => {
                                         <Divider/>
                                         <Text type="secondary">Прогресс:</Text>
                                         {courseProgress[course.id] !== undefined && (
-                                            <Progress percent={courseProgress[course.id]} size={[300, 20]}/>
+                                            <Progress showInfo={true} status={"active"} percent={courseProgress[course.id]} size={[300, 20]}/>
                                         )}
                                     </div>
                                 )}
@@ -166,13 +166,15 @@ const CoursesPage = () => {
                 </Row>
             )}
 
-            <Tooltip title="Создать курс">
-                <FloatButton
-                    icon={<PlusOutlined/>}
-                    onClick={openCreateModal}
-                    type="primary"
-                />
-            </Tooltip>
+            {(isTeacher || isAdmin) && (
+                <Tooltip title="Создать курс">
+                    <FloatButton
+                        icon={<PlusOutlined/>}
+                        onClick={openCreateModal}
+                        type="primary"
+                    />
+                </Tooltip>
+            )}
 
             <CreateCourseModalForm/>
             <UpdateCourseModalForm/>

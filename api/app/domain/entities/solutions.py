@@ -42,6 +42,7 @@ class SolutionCommentCreate(SolutionCommentBase):
 class SolutionCommentRead(SolutionCommentBase):
     comment_autor_id: int
     solution_id: int
+    created_at: datetime
 
     comment_autor: UserRead
 
