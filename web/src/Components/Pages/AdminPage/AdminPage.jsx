@@ -57,11 +57,6 @@ const AdminPage = () => {
             onFilter: (value, record) => record.status.title === value,
         },
         {
-            title: "Статус",
-            dataIndex: "status",
-            key: "status",
-        },
-        {
             title: "Действия",
             key: "actions",
             render: (_, record) => (
