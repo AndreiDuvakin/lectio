@@ -147,9 +147,10 @@ docker run -d \
   andreiduvakin/lectio-api:latest
 ```
 
-**Вариант B — собрать локально**
+**Вариант B — собрать локально**  
+Запускается из папки api:
 ```bash
-docker build -t lectio-api .
+docker build -t lectio-api . -а app/Dockerfile
 docker run -d --name lectio-api -p 8000:8000 lectio-api
 ```
 
@@ -217,7 +218,7 @@ npm run dev
 Приложение будет доступно по адресу: http://localhost:5173
 
 ### 2. Запуск через Docker
-
+Запускается из папки web:
 **Вариант A — готовый образ**  
 Готовый образ уже собран с продакшен-настройками!
 **VITE_BASE_URL** и **VITE_ROOT_ROLE_NAME** жёстко зашиты в образ на этапе сборки:
