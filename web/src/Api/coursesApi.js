@@ -74,6 +74,13 @@ export const coursesApi = createApi({
             }),
             invalidatesTags: ['student'],
         }),
+        getGradebookByCourse: builder.query({
+            query: (courseId) => ({
+                url: `/courses/gradebook/${courseId}/`,
+                method: "GET",
+            }),
+            providesTags: ['gradebook'],
+        }),
     }),
 });
 
@@ -87,4 +94,5 @@ export const {
     useReplaceCourseTeachersMutation,
     useGetCourseStudentsQuery,
     useReplaceCourseStudentsMutation,
+    useGetGradebookByCourseQuery,
 } = coursesApi;

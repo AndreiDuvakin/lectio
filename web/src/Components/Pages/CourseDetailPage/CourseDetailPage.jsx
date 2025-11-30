@@ -5,7 +5,7 @@ import {
     Card,
     Col,
     Empty,
-    FloatButton,
+    FloatButton, Grid,
     Popconfirm,
     Result,
     Row,
@@ -19,8 +19,8 @@ import {
     BookOutlined, CheckCircleFilled, ClockCircleOutlined,
     DeleteOutlined,
     EditOutlined,
-    FormOutlined,
-    PlusOutlined
+    FormOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
+    PlusOutlined, TableOutlined
 } from "@ant-design/icons";
 import {useNavigate, useParams} from "react-router-dom";
 import {ROLES} from "../../../Core/constants.js";
@@ -32,12 +32,17 @@ import UpdateLessonModalForm from "./Components/UpdateLessonModalForm/UpdateLess
 import CreateTaskModalForm from "./Components/CreateTaskModalForm/CreateTaskModalForm.jsx";
 import UpdateTaskModalForm from "./Components/UpdateTaskModalForm/UpdateTaskModalForm.jsx";
 import ViewTaskModal from "./Components/ViewTaskModalForm/ViewTaskModal.jsx";
+import {useState} from "react";
 
 
 const {Title, Text} = Typography;
+const {useBreakpoint} = Grid;
 
 const CourseDetailPage = () => {
     const navigate = useNavigate();
+    const screens = useBreakpoint();
+    const [hovered, setHovered] = useState(false);
+
     const {courseId} = useParams();
     const {
         tasksData,
@@ -242,6 +247,39 @@ const CourseDetailPage = () => {
             <ViewTaskModal
                 courseId={courseId}
             />
+            <div
+                style={{
+                    position: "fixed",
+                    right: 0,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    transition: "right 0.3s ease",
+                    zIndex: 1000,
+                    display: screens.xs ? "none" : "block",
+                }}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+            >
+                <Button
+                    type="primary"
+                    onClick={() => {
+                        navigate(`/courses/${courseId}/gradebook/`)
+                    }}
+                    icon={<TableOutlined/>}
+                    style={{
+                        width: hovered ? 250 : 50,
+                        padding: hovered ? "0 20px" : "0",
+                        overflow: "hidden",
+                        textAlign: "left",
+                        transition: "width 0.3s ease, padding 0.3s ease",
+                        borderRadius: "4px 0 0 4px",
+                    }}
+                >
+                    {hovered && (
+                        <>Журнал успеваемости</>
+                    )}
+                </Button>
+            </div>
             <UpdateTaskModalForm/>
             {[CONFIG.ROOT_ROLE_NAME, ROLES.TEACHER].includes(userData.role.title) && (
                 <FloatButton.Group
@@ -262,7 +300,9 @@ const CourseDetailPage = () => {
                         onClick={handleCreateTask}
                     />
                 </FloatButton.Group>
-            )}
+
+            )
+            }
         </div>
     )
 };

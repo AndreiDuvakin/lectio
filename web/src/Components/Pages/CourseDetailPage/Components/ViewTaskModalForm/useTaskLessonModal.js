@@ -214,7 +214,7 @@ const useViewTaskModal = () => {
             }
 
 
-            const response = await fetch(`${CONFIG.BASE_URL}/solutions/file/${fileId}/`, {
+            const response = await fetch(`${CONFIG.BASE_URL}/tasks/file/${fileId}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

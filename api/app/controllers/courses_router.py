@@ -7,11 +7,13 @@ from app.database.session import get_db
 from app.domain.entities.course_teachers import CourseTeacherRead, CourseTeacherCreate
 from app.domain.entities.courses import CourseRead, CourseCreate, CourseUpdate, CourseCreated
 from app.domain.entities.enrollments import EnrollmentRead, EnrollmentCreate
+from app.domain.entities.gradebook import GradeBookRead
 from app.domain.models import User
 from app.infrastructure.course_teachers_service import CourseTeachersService
 from app.infrastructure.courses_service import CoursesService
 from app.infrastructure.dependencies import require_auth_user, require_teacher, require_admin
 from app.infrastructure.enrollments_service import EnrollmentsService
+from app.infrastructure.gradebook_service import GradeBookService
 
 courses_router = APIRouter()
 
@@ -152,3 +154,13 @@ async def replace_course_students(
 ):
     service = EnrollmentsService(db)
     return await service.replace_course_students_list(students, course_id)
+
+
+@courses_router.get("/gradebook/{course_id}/", response_model=GradeBookRead)
+async def get_gradebook(
+        course_id: int,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_auth_user)
+):
+    service = GradeBookService(db)
+    return await service.get_gradebook_by_course_id(course_id)
